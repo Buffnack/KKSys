@@ -1,0 +1,92 @@
+\documentclass[
+a4paper,
+twoside,
+DIV=12,
+BCOR=8mm,
+headlineinclude=true,
+footinclude=false,
+numbers=noenddot,
+headheight=40pt, 11pt]{scrartcl}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[ngerman]{babel}
+\usepackage{amsfonts, amsmath, amsthm, amssymb}
+\usepackage{graphicx}
+\usepackage{multicol}
+\usepackage{fancyhdr}
+\usepackage{listings}
+\pagestyle{fancy}
+\setlength{\parindent}{0pt}
+
+\lhead{NameNotFound}
+\rhead{Spezifikation des Grundlegenden Systems}
+
+\begin{document}
+
+
+
+\section{Grundbeschreibung des Systems}
+Das System soll grundlegend eine Verwaltung von Veranstaltungen, Terminen und andere zeitabhängige Ereignisse bereitstellen, welche bezüglich der Veranstaltung relevant sind. Das System soll auch ein Karteikartensystem bereitstellen, welches gefüllt werden kann mit Lehrinhalten der oben genannten Veranstaltung. Das System soll automatisiert auf dem Trägersystem/Betriebssystem gestartet werden und die am selben Tag anstehende bzw. schon abgelaufenen Veranstaltungen anzeigen. Außerdem soll hier die Möglichkeit für den Nutzer existieren, neue Lehrinhalte der jeweiligen Veranstaltungen als Karteikartenstapel hinzu zufügen, bereits erstelle Karteikarten abrufen und durcharbeiten kann mit einer Abfragefunktion. Jederzeit soll der Nutzer in der Lage sein die Karteikarten zu bearbeiten, falls ein inhaltlicher Fehler vorliegen sollte. Das System soll auch bei anstehenden Terminen eine Erinnerung permanent einblenden, wenn diese zeitlich nah sind (max. 2 Tage vor dem Ereignis). Das System soll eine Ausgabefunktion der Karteikarten beinhalten, welche es dem Nutzer ermöglicht, die erstellten Karteikarten als PDF ausgeben zu lassen und diese zu drucken und in Karteikarten zu zerschneiden, damit der Nutzer nicht zwingend einen Computer benötigt.
+\section{Anwendungsgebiet und Zielgruppe}
+Das System soll auf dem Zielsystem Windows funktionieren und ausführbar sein.
+Das System soll überall da Anwendung finden, wo eine theoretische bzw. nah praxisorientierte Ausbildungen mit Theorie gemacht werden. Dies betrifft Auszubildende in Betrieben, Studenten an Hochschulen und Universitäten, sich fortbildende Personen in Abendschulen oder extern angebotenen Seminaren und Schüler. Auch soll das System ohne Verwaltungsfunktion von Veranstaltung verwendet werden und nur das Karteikartensystem bereitstellen. Die Zielgruppe für diesem Fall wäre alle Personen, die Inhalte durch Karteikarten sich aneignen können. 
+\section{Liste der benötigten Schnittstellen nach Außen}
+Die folgende List enthält die Schnittstellen zu Subsysteme, welche vom System grundlegend verwendet werden.
+\begin{enumerate}
+	\item Datenbanksystem
+	\item Dateisystem
+	\item Benachrichtigungsfunktion des Trägersystems
+	\item Tex-Schnitstelle zur Erzeugung von PDF-Dokumenten
+\end{enumerate}
+\section{Grundanforderung}
+Spezifikation der Grundanforderung. Hierbei ist wichtig, dass alle Objekte serialisiert in der Datenbank gespeichert werden sollen.
+\subsection{Veranstaltungskalender}
+Der Veranstaltungskalender soll Lehrveranstaltungen, wichtige Termine der Lehrveranstaltung sowie wöchentliche Abgaben beinhalten inklusive der Uhrzeit. Die einzutragenden Veranstaltungen müssen in einem bestimmten Zyklus im Verlauf eines Zeitraumes von mehr als zwei Wochen jeweils am selben Tag stattfinden. Dementsprechend beinhaltet eine Veranstaltung den Namen des Tages, die Uhrzeit sowie Informationen über mögliche Ersatztermine, welche in der jeweiligen Woche beachtet werden. Wichtige Termine können zusammenhängende Veranstaltungen sein, welche durch die Hauptveranstaltung gegeben sind. Folgende Hierarchie ist bezüglich der Veranstaltungen gegeben:
+\begin{enumerate}
+	\item[] Veranstaltung
+	\begin{enumerate}
+		\item[] Unterveranstaltungen
+		\item[] zyklische Termine
+		\item[] einmalige Termine
+	\end{enumerate}
+\end{enumerate} 
+Zu beachten ist, das eine Unterveranstaltungen wiederum zyklische Termine oder einmalige Termine beinhalten kann. Weitere Rekursion ist nicht geplant. Die kommenden Veranstaltungen in maximal 2 Tagen sollen permanent zur Kenntnis genommen werden können.
+\subsection{Karteikartensystem}
+Jede Veranstaltung soll mehrere benannte Karteikartenstapel beinhalten können. Der Name der Stapel soll den Inhalt der Karteikarten möglichst präzise wiedergeben. Das System soll, wenn ein Stapel gewählt worden ist, nur in der Lage sein, diesen zu bearbeiten. Wenn ein neuer Stapel erstellt wird, besitzt dieser noch keine Karteikarten.
+\subsection{Bearbeitung von Karteikarten}
+Im angewählten Karteikartenstapel soll man in der Lage sein, neue Karteikarten zu erstellen, existierende zu Bearbeiten oder diese auf dem Stapel zu entfernen. Zu jedem Zeitpunkt soll der Nutzer in der Lage sein jede Karteikarte zu bearbeiten, jedoch nicht, zu jedem Zeitpunkt neue zu erstellen oder zu entfernen. 
+\subsubsection{Entfernen von Karteikarten}
+In Tests kann eine Karte nur zum entfernen markiert werden und diese dadurch überspringen. Eine Karteikarte soll genau dann entfernt werden, wenn diese Leer ist, sonst wird diese als nicht sichtbar in Tests markiert. Fehlerhafte Karteikarten sollen bearbeitet werden. 
+\subsection{Karteikarte}
+Eine Karteikarte soll genau zwei Einträge besitzen. Einmal eine Fragestellung und eine Antwort. Pro Karteikarte sollen optional Schlüsselworte mit oder ohne Beachtung der Reihenfolge eingetragen werden. So soll der Nutzer die Möglichkeit haben, ganze Sätze als Antwort zu definieren. Die Karteikarten lassen sich in drei Untergruppen einteilen um mehr Inhalte abfragbar zu machen.
+\subsubsection{Standard Karteikarte}
+Diese Karte soll dem Prinzip der klassischen Karteikarte entsprechen. Die Schlüsselworte sollen dafür verwendet werden, um mehrere Antworten zu realisieren, welche alle benötigt werden. Diese Karte soll standardmäßig nicht invertierbar sein, sprich die beiden Einträge sollen nicht sowohl Antwort als auch Frage sein. Die Möglichkeit der Invertierbarkeit soll vom Nutzer bestimmt werden. Diese Karte soll für Begrifflichkeiten genutzt werden.
+\subsubsection{Mathematikkarte}
+Dieser Karteikartentyp soll fähig sein, mathematische Formeln, Definition, Sätze, Lemmata und Korollars als Einträge zu besitzen. Hierbei soll die Anordnung der mathematischen Symbole ausschlaggebend zur Darstellung für den Nutzer sein. Die Schlüsselworte sollen für Definition die Bedingungen und die geltenden Regeln beinhalten, sofern diese eine angemessene leichte Eingabe des Nutzers voraussetzen. Dieses Eingabe schließt mathematische Symbole aus, welche nicht von der Ascii-Tabelle gedeckt sind. Für fehlende Realisierung einer Eingabehilfe für diese mathemathische Symbole sollen Worte als Schlüsselworte realisiert werden. Wenn eine $\sum_{i = 0}^{n}$ gegeben ist, sollen die Schlüsselworte als \" Summe von i = 0 bis n \" interpretiert werden. Interpreter der Symbole soll erweiterbar sein, siehe Abschnitt Interpreter. Diese Karte soll invertierbar sein.
+\subsubsection{Grafik-(Kartei)karte}
+Diese Karte soll dafür verwendet werden, als Eintrag eine Grafik zu tragen und als Eintrag für die Antwort das beschriebene Objekt beinhalten. Diese Karte soll standardmäßig nicht invertierbar sein. Der Nutzer darf bei Bedarf diese Funktion aktivieren. Die Möglichkeit soll gegeben sein, auch die genutzte Modellierung nennen zu können. Als Beispiel sei ein RTL-Gatter gegeben sein. Der Nutzer soll auch in der Lage sein, als zusätzliche Antwort, das es sich hierbei um ein Gatter in RTL-Technologie handelt. 
+\subsection{Abfragesystem}
+Der Nutzer soll in der Lage sein, die von ihm erstellen Karteikarten als Test abzufragen. Dabei muss genau ein Stapel gewählt werden. Der Nutzer soll auch in der Lage sein, alle Stapel einer Veranstaltung abzufragen. Vor der Abfrage soll gefragt werden, ob die Invertierbarkeit der Karten aktiviert werden soll (nur für jene, welche bei der Erstellung/Bearbeitung die Invertierbarkeit gesetzt haben). Danach werden nach dem Zufallsprinzip alle Karten aneinander gereiht und abgefragt. Hierfür gibt es genau zwei Varianten, wie man den Test bestehen kann.
+\subsubsection{Ja-Nein-Variante}
+Hierbei wird der Nutzer die Karteikarte sehen und kann diese umdrehen lassen. Liegt er mit seiner Lösung richtig, markiert dieser die Karte mit einem Hacken, sonst mit einem Kreuz. Die Auswertung des Tests ist abhängig von der Ehrlichkeit des Nutzer. Diese Variante soll nur bei einem Stapel mit Standardkarteikarten als Möglichkeit empfohlen sein.
+\subsubsection{Eingabe-Variante}
+Hierbei muss der Nutzer seine Antwort eingeben. Die Antwort wird auf Schlüsselworte überprüft. Je nach Kartentyp soll es verschieden viele Eingabefelder geben, damit das System die Antwort getrennt von einander auswerten kann. Die Karte gilt als bestanden, wenn alle Schlüsselworte mit Beachtung der Reihenfolge (definiert in Karteikarte), in der Antwort enthalten sind. Fehlende sollen farblich hervorgehoben werden.
+\subsection{Ausgabe als PDF}
+Das System soll in der Lage sein, einen Stapel als PDF auszugeben, wobei jeder Karte auf Vorderseite die jeweilige Antwort auf der Rückseite hat. Dies setzt Duplexdruck vorraus. Das System soll bei Installation den Nutzer fragen, ob dieses Feature verwendet werden soll. Dabei wird bei Zustimmung die Latex-Distribution installiert und bereitet alles vor, was zum kompilieren eines Tex-Dokuments notwendig ist. 
+
+\section{Erweiterte Grundanforderungen}
+Die erweiterten Grundanforderungen stellen Features da, welche im Grundlegenden nicht enthalten sein müssen, jedoch im fertigem System beinhaltet sein müssen.
+\subsection{Datenbankserver}
+Das System soll die Datenbank als Cloudserver realisieren können. Hierbei soll der Nutzer in der Lage sein, seinen eigenen Server auszuwählen oder Onedrive zu verwenden. Wenn diese Funktion nicht gewünscht ist, wird die Datenbank local auf dem Zielsystem angelegt. 
+
+\subsection{Digitale Unterlagen der Veranstaltungen}
+Das System soll in der Lage sein, Dokumente, welche digital vorliegen, den einzelnen Veranstaltung zuzuweisen. Hier soll man eine von zwei Möglichkeiten benutzen, diese zur Verwaltung hinzuzufügen.
+\subsubsection{Hinzufügen über Dateisystem}
+Das System besitzt ein eigenes Verzeichnis, in dem je ein Verzeichnis für Dokumente, selbst erstellte Dokumente im Zusammenhang mit der Veranstaltung und eines für sonstige auf die Veranstaltung bezogene Dokumente (Programm-Codes, Diagramme, Bilder). Unterlagen sollen in einem dieser Verzeichnisse gespeichert werden
+\subsubsection{Durchsuchen des Dateisystem}
+Der Nutzer kann ein schon auf dem Zielsystem existierendes Dokument den Veranstaltungen zuweisen. Der Nutzer soll die Art des Dokuments festlegen und das Dokument suchen. Nach Abschluss der Suche wird das Dokument dem jeweiligen Unterordner zugewiesen.
+
+
+
+\end{document}
