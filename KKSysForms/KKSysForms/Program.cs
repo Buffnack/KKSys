@@ -17,6 +17,9 @@ namespace KKSysForms
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new Form1());
+
+            //Friedrich darf die Gui machen uns intressierts ab hier
+            //Einstiegspunkt der Programmlogic
         }
     }
 }
