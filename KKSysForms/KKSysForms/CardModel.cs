@@ -6,7 +6,18 @@ using System.Threading.Tasks;
 
 namespace KKSysForms_CardModel
 {
-    class CardModel
+    abstract class Card
     {
+
+    }
+
+    class ContentCard : Card
+    {
+
+    }
+
+    class QACard : Card
+    {
+    
     }
 }
