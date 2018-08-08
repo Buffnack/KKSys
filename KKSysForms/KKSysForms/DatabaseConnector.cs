@@ -10,7 +10,7 @@ using System.Data.Odbc;
 //Connection to SQL 6.5 or higher
 using System.Data.OleDb;
 
-
+//We gonna use PostgreSQL because its free -> need extern reference!
 namespace KKSysDatabase
 {
     class DatabaseConnector
