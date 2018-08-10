@@ -15,7 +15,30 @@ namespace KKSysDatabase
 {
     class DatabaseConnector
     {
+        
+        public DatabaseConnector()
+        {
 
+        }
+        //This trhows exception
+        public void insertIntoDataBase()
+        {
+
+        }
+
+        public void updateEntry()
+        {
+
+        }
+
+        public void selectFromDatabase()
+        {
+
+        }
+
+        
 
     }
+
+
 }

@@ -9,7 +9,7 @@ using System.Runtime.Serialization;
 
 namespace KKSysForms_DataTypes
 {
-    [Serializable]
+    
     abstract class DataType
     {
 
@@ -21,11 +21,15 @@ namespace KKSysForms_DataTypes
         }
         //General method declaration for String method
         abstract public override String ToString() ;
+
+        
         //Object to Byte for database
         abstract public byte[] EncodeToByte();
+
+        abstract public void DecodeFromByte(byte[] data);
         
     }
-
+    [Serializable]
     class Text : DataType
     {
         private String content;
@@ -41,7 +45,7 @@ namespace KKSysForms_DataTypes
             return content;
         }
 
-        public void SentContent(String set)
+        public void SetContent(String set)
         {
             this.content = set;
         }
@@ -61,14 +65,41 @@ namespace KKSysForms_DataTypes
             
             return returnValue;
         }
-    }
 
+        public override void DecodeFromByte(byte[] data)
+        {
+
+        }
+
+        
+    }
+    
     class Graphic : DataType
     {
-
+        
         private Image content;
 
+       
         private bool currentFromFileSystem;
+
+        public Graphic(String pathToGraphic)
+        {
+            try
+            {
+
+                this.content = Image.FromFile(pathToGraphic);
+                currentFromFileSystem = true;
+            }
+            catch (IOException e)  
+            {
+                content = null;
+                throw e;
+            }
+            
+       
+        }
+
+       
 
         public override byte[] EncodeToByte()
         {
@@ -87,21 +118,25 @@ namespace KKSysForms_DataTypes
                 return null;
 
             }
-            //Back to Image
-           // MemoryStream testBack = new MemoryStream(returnVar);
-           // Image test = Image.FromStream(testBack);
+   
 
             return returnVar;
         }
-        //This Method needs a temporary File to store the Image, create .Tex and compile this text
-        //Means: This Methods return for Graphics a path
+
+        public override void DecodeFromByte(byte[] data)
+        {
+            
+             MemoryStream testBack = new MemoryStream(data);
+             this.content = Image.FromStream(testBack);
+        }
+        
         public override String ToString()
         {
-            return "";
+            return null;
         }
     }
 
-    //Requires Numeric class with String in texFormats
+    //How we gonna do that?(XML file maybe)?
     
     class Formula : DataType
     {
@@ -111,6 +146,10 @@ namespace KKSysForms_DataTypes
         }
         //Not implemented
         public override byte[] EncodeToByte()
+        {
+            throw new NotImplementedException();
+        }
+        public override void DecodeFromByte(byte[] data)
         {
             throw new NotImplementedException();
         }
