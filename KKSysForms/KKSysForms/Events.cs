@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 //Serializeability is missing
+//Std value for start end
 namespace KKSysForms_Event
 {
     internal enum DayCode { Mon, Di, Mi, Do, Fr, Sa, So }
