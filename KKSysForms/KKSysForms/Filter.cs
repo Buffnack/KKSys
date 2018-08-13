@@ -8,12 +8,16 @@ using KKSysForms_CardModel;
 using KKSysForms_Event;
 
 
+
 namespace KKSysForms_Filter
 {
    
     abstract class Filter 
     {
         protected bool noFilter;
+
+        //How the const should be?
+
         public String generateSQLRequest()
         {
             return generateSQLSelect() + generateSQLFrom() + generateSQLWhere();
@@ -23,7 +27,7 @@ namespace KKSysForms_Filter
         protected abstract String generateSQLSelect();
         protected abstract String generateSQLCreateView();
     }
-
+    //Definetly check it with Franz
     class CardFilter : Filter
     {
         private bool isContent { get; set; }
@@ -119,6 +123,25 @@ namespace KKSysForms_Filter
 
     class EventFilter : Filter
     {
+        //If null, show all for day
+        //If not null, ignore DayOfWeek and show all with eventLabel
+        public EventLabel eventLabel { get; set; }
+
+        //Cant be null;
+        public DayOfWeek dayCode { get; set; }
+
+        public bool repeating { get; set; }
+
+        public bool both { get; set; }
+
+        public EventFilter()
+        {
+            this.noFilter = false;
+            
+            dayCode = DateTime.Now.DayOfWeek;
+            this.eventLabel = null;
+        }
+
         protected override string generateSQLCreateView()
         {
             throw new NotImplementedException();

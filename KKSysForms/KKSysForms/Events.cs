@@ -67,9 +67,9 @@ namespace KKSysForms_Event
 
     abstract class RepeatingEvents : Event
     {
-        protected DayCode dayCode;
+        protected DayOfWeek dayCode;
 
-        public RepeatingEvents(EventLabel lab,String name, int start, int end, DayCode dayCode) : base(lab,name, start, end)
+        public RepeatingEvents(EventLabel lab,String name, int start, int end, DayOfWeek dayCode) : base(lab,name, start, end)
         {
 
         }
@@ -127,7 +127,7 @@ namespace KKSysForms_Event
         private String location { get; set; }
         private String additionalInformation { get; set; }
 
-        public Lecture(EventLabel lab,String name, int start, int end, DayCode dayCode, String location, String additonalInformation) : base(lab,name, start, end, dayCode)
+        public Lecture(EventLabel lab,String name, int start, int end, DayOfWeek dayCode, String location, String additonalInformation) : base(lab,name, start, end, dayCode)
         {
 
         }
@@ -138,7 +138,7 @@ namespace KKSysForms_Event
         private DateTime deadLine;
 
         private bool inclusivDay;
-        public Task(EventLabel lab,String name, int start, int end, DayCode dayCode, bool inclusivDay) : base (lab,name, start, end, dayCode)
+        public Task(EventLabel lab,String name, int start, int end, DayOfWeek dayCode, bool inclusivDay) : base (lab,name, start, end, dayCode)
         {
             this.inclusivDay = inclusivDay;
         }

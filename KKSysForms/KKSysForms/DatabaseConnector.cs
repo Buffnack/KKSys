@@ -152,35 +152,6 @@ namespace KKSysDatabase
            
         }
         //Requires FilterOption
-        public void InsertIntoDatabaseCards()
-        {
-            if (!(readyToAdd.Count == 0))
-            {
-                history.Add(readyToAdd);
-            }
-            readyToAdd.Clear();
-            
-
-        }
-
-
-        //How?
-        public void InsertIntoDataBase()
-        {
-
-        }
-        //How
-        public void UpdateEntry()
-        {
-
-        }
-        //Filter option
-        public void SelectFromDatabase()
-        {
-
-        }
-
-        
 
     }
 
