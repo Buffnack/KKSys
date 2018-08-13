@@ -12,7 +12,7 @@ namespace KKSysForms
         [STAThread]
         static void Main()
         {
-           // KKSysDatabase.DatabaseConnector test = new KKSysDatabase.DatabaseConnector();
+            KKSysDatabase.DatabaseConnector test = new KKSysDatabase.DatabaseConnector();
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new Form1());

@@ -47,12 +47,12 @@ namespace KKSysForms_CardModel
 
         public void SetQuestionContent(DataType Content)
         {
-            this.questionContent = Content;
+            this.questionContent.Add(Content);
         }
 
         public void SetBackContent(DataType Content)
         {
-            this.answerContent = Content;
+            this.answerContent.Add(Content);
         }
 
         public List<String> getTags()

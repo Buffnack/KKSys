@@ -8,3 +8,27 @@ C:\Users\Franz\Desktop\Neuer Ordner\KKSys\KKSysForms\KKSysForms\obj\Debug\KKSysF
 C:\Users\Franz\Desktop\Neuer Ordner\KKSys\KKSysForms\KKSysForms\obj\Debug\KKSysForms.csproj.CoreCompileInputs.cache
 C:\Users\Franz\Desktop\Neuer Ordner\KKSys\KKSysForms\KKSysForms\obj\Debug\KKSysForms.exe
 C:\Users\Franz\Desktop\Neuer Ordner\KKSys\KKSysForms\KKSysForms\obj\Debug\KKSysForms.pdb
+C:\Users\finnl\OneDrive\Desktop\KarteikartenProjekt\KKSys\KKSysForms\KKSysForms\obj\Debug\KKSysForms.csprojAssemblyReference.cache
+C:\Users\finnl\OneDrive\Desktop\KarteikartenProjekt\KKSys\KKSysForms\KKSysForms\obj\Debug\KKSysForms.Form1.resources
+C:\Users\finnl\OneDrive\Desktop\KarteikartenProjekt\KKSys\KKSysForms\KKSysForms\obj\Debug\KKSysForms.Properties.Resources.resources
+C:\Users\finnl\OneDrive\Desktop\KarteikartenProjekt\KKSys\KKSysForms\KKSysForms\obj\Debug\KKSysForms.csproj.GenerateResource.cache
+C:\Users\finnl\OneDrive\Desktop\KarteikartenProjekt\KKSys\KKSysForms\KKSysForms\obj\Debug\KKSysForms.csproj.CoreCompileInputs.cache
+C:\Users\finnl\OneDrive\Desktop\KarteikartenProjekt\KKSys\KKSysForms\KKSysForms\obj\Debug\KKSysForms.exe
+C:\Users\finnl\OneDrive\Desktop\KarteikartenProjekt\KKSys\KKSysForms\KKSysForms\obj\Debug\KKSysForms.pdb
+C:\Users\finnl\OneDrive\Desktop\KarteikartenProjekt\KKSys\KKSysForms\KKSysForms\bin\Debug\KKSysForms.exe.config
+C:\Users\finnl\OneDrive\Desktop\KarteikartenProjekt\KKSys\KKSysForms\KKSysForms\bin\Debug\KKSysForms.exe
+C:\Users\finnl\OneDrive\Desktop\KarteikartenProjekt\KKSys\KKSysForms\KKSysForms\bin\Debug\KKSysForms.pdb
+C:\Users\finnl\OneDrive\Desktop\KarteikartenProjekt\KKSys\KKSysForms\KKSysForms\bin\Debug\EntityFramework.dll
+C:\Users\finnl\OneDrive\Desktop\KarteikartenProjekt\KKSys\KKSysForms\KKSysForms\bin\Debug\EntityFramework.SqlServer.dll
+C:\Users\finnl\OneDrive\Desktop\KarteikartenProjekt\KKSys\KKSysForms\KKSysForms\bin\Debug\System.Data.SQLite.dll
+C:\Users\finnl\OneDrive\Desktop\KarteikartenProjekt\KKSys\KKSysForms\KKSysForms\bin\Debug\System.Data.SQLite.EF6.dll
+C:\Users\finnl\OneDrive\Desktop\KarteikartenProjekt\KKSys\KKSysForms\KKSysForms\bin\Debug\System.Data.SQLite.Linq.dll
+C:\Users\finnl\OneDrive\Desktop\KarteikartenProjekt\KKSys\KKSysForms\KKSysForms\bin\Debug\System.Runtime.CompilerServices.Unsafe.dll
+C:\Users\finnl\OneDrive\Desktop\KarteikartenProjekt\KKSys\KKSysForms\KKSysForms\bin\Debug\System.ValueTuple.dll
+C:\Users\finnl\OneDrive\Desktop\KarteikartenProjekt\KKSys\KKSysForms\KKSysForms\bin\Debug\EntityFramework.xml
+C:\Users\finnl\OneDrive\Desktop\KarteikartenProjekt\KKSys\KKSysForms\KKSysForms\bin\Debug\EntityFramework.SqlServer.xml
+C:\Users\finnl\OneDrive\Desktop\KarteikartenProjekt\KKSys\KKSysForms\KKSysForms\bin\Debug\System.Data.SQLite.xml
+C:\Users\finnl\OneDrive\Desktop\KarteikartenProjekt\KKSys\KKSysForms\KKSysForms\bin\Debug\System.Data.SQLite.dll.config
+C:\Users\finnl\OneDrive\Desktop\KarteikartenProjekt\KKSys\KKSysForms\KKSysForms\bin\Debug\System.Runtime.CompilerServices.Unsafe.xml
+C:\Users\finnl\OneDrive\Desktop\KarteikartenProjekt\KKSys\KKSysForms\KKSysForms\bin\Debug\System.ValueTuple.xml
+C:\Users\finnl\OneDrive\Desktop\KarteikartenProjekt\KKSys\KKSysForms\KKSysForms\obj\Debug\KKSysForms.csproj.CopyComplete

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
+
 //Serializeability is missing
 //Std value for start end
 namespace KKSysForms_Event
@@ -46,18 +47,23 @@ namespace KKSysForms_Event
 
         public String Name { get; set; }
 
-        public EventLabel eventLabel;
+        public bool SelfMade { get; set; }
+
+        public EventLabel EventLabel;
 
         public Event(EventLabel label,String name, int start, int end)
         {
-            this.eventLabel = label;
+            
+            this.EventLabel = label;
             this.Name = name;
             this.Start = start;
             this.End = end;
         }
 
-        
+
     }
+
+  
 
     abstract class RepeatingEvents : Event
     {
@@ -73,16 +79,18 @@ namespace KKSysForms_Event
 
         }
 
-        
+
 
     }
+
+   
 
     abstract class NonRepeatingEvents : Event
     {
         protected RepeatingEvents replace { get; set; }
         protected int numOfReplace { get; set; }
 
-        public NonRepeatingEvents(RepeatingEvents forEvent) : base(forEvent.eventLabel,forEvent.Name, forEvent.Start, forEvent.End)
+        public NonRepeatingEvents(RepeatingEvents forEvent) : base(forEvent.EventLabel,forEvent.Name, forEvent.Start, forEvent.End)
         {
 
         }
