@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
+
 //Serializeability is missing
 //Std value for start end
 namespace KKSysForms_Event
@@ -46,24 +47,29 @@ namespace KKSysForms_Event
 
         public String Name { get; set; }
 
-        public EventLabel eventLabel;
+        public bool SelfMade { get; set; }
+
+        public EventLabel EventLabel;
 
         public Event(EventLabel label,String name, int start, int end)
         {
-            this.eventLabel = label;
+            
+            this.EventLabel = label;
             this.Name = name;
             this.Start = start;
             this.End = end;
         }
 
-        
+
     }
+
+  
 
     abstract class RepeatingEvents : Event
     {
-        protected DayCode dayCode;
+        protected DayOfWeek dayCode;
 
-        public RepeatingEvents(EventLabel lab,String name, int start, int end, DayCode dayCode) : base(lab,name, start, end)
+        public RepeatingEvents(EventLabel lab,String name, int start, int end, DayOfWeek dayCode) : base(lab,name, start, end)
         {
 
         }
@@ -73,16 +79,18 @@ namespace KKSysForms_Event
 
         }
 
-        
+
 
     }
+
+   
 
     abstract class NonRepeatingEvents : Event
     {
         protected RepeatingEvents replace { get; set; }
         protected int numOfReplace { get; set; }
 
-        public NonRepeatingEvents(RepeatingEvents forEvent) : base(forEvent.eventLabel,forEvent.Name, forEvent.Start, forEvent.End)
+        public NonRepeatingEvents(RepeatingEvents forEvent) : base(forEvent.EventLabel,forEvent.Name, forEvent.Start, forEvent.End)
         {
 
         }
@@ -119,7 +127,7 @@ namespace KKSysForms_Event
         private String location { get; set; }
         private String additionalInformation { get; set; }
 
-        public Lecture(EventLabel lab,String name, int start, int end, DayCode dayCode, String location, String additonalInformation) : base(lab,name, start, end, dayCode)
+        public Lecture(EventLabel lab,String name, int start, int end, DayOfWeek dayCode, String location, String additonalInformation) : base(lab,name, start, end, dayCode)
         {
 
         }
@@ -130,7 +138,7 @@ namespace KKSysForms_Event
         private DateTime deadLine;
 
         private bool inclusivDay;
-        public Task(EventLabel lab,String name, int start, int end, DayCode dayCode, bool inclusivDay) : base (lab,name, start, end, dayCode)
+        public Task(EventLabel lab,String name, int start, int end, DayOfWeek dayCode, bool inclusivDay) : base (lab,name, start, end, dayCode)
         {
             this.inclusivDay = inclusivDay;
         }

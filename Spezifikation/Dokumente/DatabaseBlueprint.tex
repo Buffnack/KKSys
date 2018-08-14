@@ -23,5 +23,32 @@ headheight=40pt, 11pt]{scrartcl}
 \rhead{Datenbankmodel}
 
 \begin{document}
-	
+	\section*{Datenbank Entwurf}
+	\subsection[Tags]{Tabellen ohne Normalisierung: Tags}
+	\begin{tabular} {|c| c|}
+		ID & Tag  \\
+	\end{tabular} 
+	\subsection[Label]{Tabelle ohne Normalisierung: EventLabel}
+	\begin{tabular}{|c| c| c|}
+		ID & Name & OberLabel? \\
+	\end{tabular}
+	\subsection[Events]{Tabelle ohne Normalisierung: Events}
+	Event:
+	\begin{tabular}{|c| c| c |c |c |c|c|}
+		ID & Start & Ende& \textbf{Label}& Name & DayCode & Repeating? 
+	\end{tabular}\\ Eventlabel:
+	 \begin{tabular}{|c |c|}
+	 	ID & Name
+	 \end{tabular}
+ 	\subsection[Thema]{Tablle ohne Normalisierung: Thema}
+ 	\begin{tabular}{|c| c| c|}
+ 		ID & Name & OberThema?
+ 	\end{tabular}
+ 	\subsection[Karteikarte]{Tabelle ohne Normalisierung: Karteikarten und Art} Karteiart:
+ 	\begin{tabular}{c |c |}
+ 		ID & Art
+ 	\end{tabular} \\ Karteikarten:
+ 	\begin{tabular}{|c| c| c| c| c| c|}
+ 		ID & \textbf{Thema} & Object & \textbf{Tag} & \textbf{EventLabel} & \textbf{KarteikartenArt} 
+ 	\end{tabular}
 \end{document}
