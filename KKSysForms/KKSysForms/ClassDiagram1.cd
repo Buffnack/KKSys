@@ -3,56 +3,36 @@
   <Class Name="KKSysForms_Event.EventLabel" Collapsed="true">
     <Position X="8.5" Y="0.75" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAACAAAAAAQAAAQAAEAAEAAAAAAAACAAA=</HashCode>
+      <HashCode>AAAAAAAAAAAAACAAAAAAQAQAAAAAAAEAAAAAAAACAAA=</HashCode>
       <FileName>Events.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="KKSysForms_Event.Event" Collapsed="true">
     <Position X="3.25" Y="1" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>EAIAAAAAACAAAAAAAAAAAAQAAAAAAAAQAAAAAAAAAAA=</HashCode>
+      <HashCode>AAIAAAAAACAAEAAAAAAAAAQgBBAAAAAAAAAAAAAAAAE=</HashCode>
       <FileName>Events.cs</FileName>
     </TypeIdentifier>
-  </Class>
-  <Class Name="KKSysForms_Event.RepeatingEvents" Collapsed="true">
-    <Position X="1.25" Y="2.25" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AAAEAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>Events.cs</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="KKSysForms_Event.Lecture" Collapsed="true">
-    <Position X="0.5" Y="3.5" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AAAgAAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>Events.cs</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="KKSysForms_Event.Task" Collapsed="true">
-    <Position X="2.25" Y="3.5" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAABIAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>Events.cs</FileName>
-    </TypeIdentifier>
+    <Lollipop Position="0.2" />
   </Class>
   <Class Name="KKSysForms_Event.NonRepeatingEvents" Collapsed="true">
     <Position X="5" Y="2.25" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAIIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Events.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="KKSysForms_Event.ReferencedOneTimeEvent" Collapsed="true">
     <Position X="4.25" Y="3.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAAAAAgAAAAAAAAAAgAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Events.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="KKSysForms_Event.NonReferencedOneTimeEvent" Collapsed="true">
     <Position X="6.25" Y="3.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Events.cs</FileName>
     </TypeIdentifier>
   </Class>
