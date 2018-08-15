@@ -123,23 +123,30 @@ namespace KKSysForms_Filter
 
     class EventFilter : Filter
     {
+
+        //Hirachy: If EventLabel is null, search for all Events with DayCode or Date in all Tables
+        // If Date is set, and DayCode too - throw Error or make two SQL calls
+        
+
         //If null, show all for day
         //If not null, ignore DayOfWeek and show all with eventLabel
-        public EventLabel eventLabel { get; set; }
+        public EventLabel EventLabel { get; set; }
 
-        //Cant be null;
-        public DayOfWeek dayCode { get; set; }
+        //If null, set it to "No Day"
+        public string DayCode { get; set; }
 
-        public bool repeating { get; set; }
+        //What about Date later than exspected?
+        public DateTime Date { get; set; }
 
-        public bool both { get; set; }
+        public bool ReplacedEvents { get; set; }
+
 
         public EventFilter()
         {
             this.noFilter = false;
             
-            dayCode = DateTime.Now.DayOfWeek;
-            this.eventLabel = null;
+            
+            this.EventLabel = null;
         }
 
         protected override string generateSQLCreateView()

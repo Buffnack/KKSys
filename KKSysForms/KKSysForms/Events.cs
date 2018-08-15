@@ -10,15 +10,15 @@ namespace KKSysForms_Event
     [Serializable]
     class EventLabel
     {
-        public String name { get; }
+        public String Name { get; }
         private List<Event> eventsUnderLabel;
-        public int containsOneTimeEvents { get; set; }
+        
 
         public EventLabel(String label)
         {
-            name = label;
+            Name = label;
             this.eventsUnderLabel = new List<Event>();
-            containsOneTimeEvents = 0;
+            
         }
 
         public void addEvent()
@@ -47,9 +47,11 @@ namespace KKSysForms_Event
 
         public String Name { get; set; }
 
-        public bool SelfMade { get; set; }
-
         public EventLabel EventLabel;
+
+        protected bool modified;
+
+        protected bool created;
 
         public Event(EventLabel label,String name, int start, int end)
         {
@@ -137,10 +139,10 @@ namespace KKSysForms_Event
     {
         private DateTime deadLine;
 
-        private bool inclusivDay;
-        public Task(EventLabel lab,String name, int start, int end, DayOfWeek dayCode, bool inclusivDay) : base (lab,name, start, end, dayCode)
+        
+        public Task(EventLabel lab,String name, int start, int end, DayOfWeek dayCode) : base (lab,name, start, end, dayCode)
         {
-            this.inclusivDay = inclusivDay;
+            
         }
 
         private void generateDeadLine()
