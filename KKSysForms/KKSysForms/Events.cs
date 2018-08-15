@@ -28,8 +28,31 @@ namespace KKSysForms_Event
             }
         }
 
-        public void generateTime(TimeStamp time, int durationInMinutes)
+        public static TimeStamp generateTime(TimeStamp time, int durationInMinutes)
         {
+            int newMinutes = time.m + durationInMinutes;
+            int newHours = time.h;
+
+            while(newMinutes >= 60)
+            {
+                newHours++;
+                newMinutes = newMinutes - 60;
+            }
+
+            while(newMinutes < 0)
+            {
+                newHours--;
+                newMinutes = newMinutes + 60;
+            }
+
+            if(newHours < 0 || newHours > 23)
+            {
+                throw new Exception("Neue Zeit liegt an einem anderen Tag.");
+            }
+
+            TimeStamp newTime = new TimeStamp(newHours, newMinutes);
+
+            return newTime;
 
         }
 
