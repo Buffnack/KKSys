@@ -53,4 +53,33 @@ headheight=40pt, 11pt]{scrartcl}
  	\end{tabular}
  \\ \\
  Nutzung von SQL Like wird uns helfen die einzelnen Veranstaltungen welche an mehreren Tagen laufen zu finden.
+ \section{Vorläufige Zerlegung für Events}
+ Wir unterscheiden zwischen sich wiederholende Events, ersetzende Events und einmaligen Events. Die Zerlegung dient zur Minimierung der doppelten Daten. Folgendes kam zur Stande: Wir trennen das Eventlabel von den Events\\
+ \begin{tabular}{c | c}
+ 	ID &Label \\
+ 	\hline \vdots & \vdots
+ \end{tabular} \\
+Wir entfernen Start und Endzeit aus der Datenbank und serialisieren das Event-Objekt. Zum ermitteln, welche Veranstaltung wann ist (bei den sich wiederholenden Events), nutzen wir einen Daycode (bspw. Mo,Di). Falls an mehreren Tagen, nutzen wir die Konkatenation MoDi etc. Suche erfolgt über Select... From ... where .. like ... \\ \\
+\begin{tabular}{c| c |c |c |c}
+	\textbf{ID} & \textsf{Lable(ID)} & Name & serialized Object & DayCode \\
+	\hline \vdots & \vdots & \vdots &\vdots & \vdots \\
+\end{tabular}\\ \\
+Hierbei sind auch die sich wiederholenden Deadlines inbegriffen.
+Für einmalige Events wird nur der Daycode ersetzt durch ein Datum.\\\\
+\begin{tabular}{c| c |c |c |c}
+	\textbf{ID} & \textsf{Lable(ID)} & Name & serialized Object & Date \\
+	\hline \vdots & \vdots & \vdots &\vdots & \vdots \\
+\end{tabular}\\\\
+Ersetzende Events durch beispielsweise Ausfälle sind wie folgt definiert:\\\\
+\begin{tabular}{c c c c}
+		\textbf{ID} & \textsf{RepeatEvent(ID)}& serialized Object & Date \\
+	\hline \vdots & \vdots & \vdots &\vdots \\
+\end{tabular} \\\\
+Genauere Information werden dann durch die Suche im sich wiederholenden Event geholt. Das serialisierte Event beinhält auch zusätzliche Informationen wie Ort und Zeit - Minimierung erfolgt hier im Beschränkung der Suchparameter. Die Suchparameter sind folgende:
+\begin{enumerate}
+	\item Name
+	\item Label 
+	\item  DayCode $\oplus$ Datum
+\end{enumerate}
+Weitere Überlegung: DayLeft als Attribut für einmalige Events: Kann man aber eventuell über den Datentype Date berechnen (Programm intern).
 \end{document}
