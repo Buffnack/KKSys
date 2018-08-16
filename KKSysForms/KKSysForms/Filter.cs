@@ -106,7 +106,7 @@ namespace KKSysForms_Filter
                 if (this.label != null)
                 {
                     returnVar = returnVar + ", EventLabel el";
-                    returnVar = returnVar + "(el.ID = k.belongTo AND el.nameOf = " + label.name + ") AND";
+                    returnVar = returnVar + "(el.ID = k.belongTo AND el.nameOf = " + label.Name + ") AND";
                 }
 
 

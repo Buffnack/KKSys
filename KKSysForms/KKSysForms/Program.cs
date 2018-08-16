@@ -12,15 +12,19 @@ namespace KKSysForms
         [STAThread]
         static void Main()
         {
-            KKSysDatabase.DatabaseConnector test = new KKSysDatabase.DatabaseConnector();
+           
+           
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Form1());
+            Form1 tmp = new Form1();
+            
+            KKSys run = new KKSys(tmp);
+            Application.Run(tmp);
 
-           
+
             //Friedrich darf die Gui machen uns intressierts ab hier
             //Einstiegspunkt der Programmlogic
-            
+
         }
     }
 }

@@ -50,7 +50,7 @@ namespace KKSysDatabase
         //maybe not needed
         private static String pathToDb;
 
-        public DatabaseConnector getInstance()
+        public static DatabaseConnector getInstance()
         {
             if (instance == null)
             {
@@ -59,6 +59,71 @@ namespace KKSysDatabase
                 
             }
             return instance;
+        }
+
+        //TODO
+        //This method should load all EventLabel from database and should load all weekly and incomming events
+        //Was ist, wenn die Datenbank leer ist? vorher anfragen ob eine Tabelle mit Settings existiert! TODO
+        //Weniger Variablen waeren schön
+        //TODO: NonRepeat and Replace
+        public List<KKSysForms_Event.EventLabel> InitialCallEventLabel()
+        {
+            List<KKSysForms_Event.EventLabel> tmp = new List<KKSysForms_Event.EventLabel>();
+            List<int> idOfEventAtPlace = new List<int>();
+            command.CommandText = "SELECT * FROM EventLabel";
+
+            resultTable = command.ExecuteReader();
+            String read = "";
+            while (resultTable.Read())
+            {
+                idOfEventAtPlace.Add(int.Parse(resultTable[0].ToString()));
+                KKSysForms_Event.EventLabel eventLabel = new KKSysForms_Event.EventLabel(resultTable[1].ToString());
+                tmp.Add(eventLabel);
+            }
+            resultTable.Close();
+
+            if (tmp.Count != idOfEventAtPlace.Count)
+            {
+                throw new Exception("Das ist jetzt aber bloed");
+            }
+            int[] id = idOfEventAtPlace.ToArray();
+            KKSysForms_Event.EventLabel[] el = tmp.ToArray();
+            tmp = null;
+            tmp = new List<KKSysForms_Event.EventLabel>();
+            idOfEventAtPlace = null;
+
+            byte[] serialized;
+            //Inaktive Events beachten! TODO
+            //TODO: Maybe try to reduce this to one loop except for 3 Loops for all kinds of Events
+            for (int i = 0; i < id.Length; i++)
+            {
+
+                command.CommandText = "SELECT serialized FROM RepeatEvents WHERE LabelID =" + id[i] + ";";
+                resultTable = command.ExecuteReader();
+                while (resultTable.Read())
+                {
+                    serialized = (byte[])resultTable[0];
+                    ms = new MemoryStream(serialized);
+                    KKSysForms_Event.RepeatEvent tempEvent = (KKSysForms_Event.RepeatEvent)bf.Deserialize(ms);
+                    el[i].addEvent(tempEvent);
+                    ms.Close();
+                    
+
+                }
+                tmp.Add(el[i]);
+                resultTable.Close();
+
+            }
+            ms.Close();
+            ms.Dispose();
+            return tmp;
+        }
+
+        //TODO
+        //This Method executes a Filter
+        public List<KKSysForms_Event.EventLabel> FilterCallEvent(KKSysForms_Filter.Filter filter)
+        {
+            return null;
         }
 
         private DatabaseConnector()
@@ -75,7 +140,7 @@ namespace KKSysDatabase
 
             //if no exception, initialize all objects;
             bf = new BinaryFormatter();
-     
+
 
 
             //Benoetigt fuer die Serialisierung
@@ -83,10 +148,10 @@ namespace KKSysDatabase
             // BinaryFormatter bf = new BinaryFormatter();
             //  bf.Serialize(ms, test);
             // byte[] testbyte = ms.ToArray();
-               
 
-              
-            
+
+
+
             //Creates PArameter-List for command - requires atleast one (?) inside of sql statement  
             //com.CreateParameter();
             //Required to store datatypes inside of database (like byte[])
@@ -102,11 +167,11 @@ namespace KKSysDatabase
             //sqlr.Read();
             //Blob datatype can be easy casted to byte[]
             // byte[] testbbyte = (byte[])sqlr[1];
-           
-            // Test second = (Test)bf.Deserialize(ms);
-            
 
-            
+            // Test second = (Test)bf.Deserialize(ms);
+
+
+
 
             //Give Ressource free, else there can not execute anything in sql
             // sqlr.Close();
@@ -114,14 +179,37 @@ namespace KKSysDatabase
             //  com.CommandText = "INSERT INTO TESTWITHSTRING VALUES ('HUEN')";
             //  com.ExecuteNonQuery();
             //  com.CommandText = "INSERT INTO TESTWITHSTRING VALUES ('DU HUEN')";
-            
+
             // com.ExecuteNonQuery();
 
 
             // com.CommandText = "SELECT * FROM TESTWITHSTRING WHERE substr(dude,1,2) = 'HU'";
             // sqlr = com.ExecuteReader();
             // sqlr.Read();
-  
+
+            //Testdaten einfuegen
+            command.CommandText = "INSERT INTO EventLabel (nameOf) VALUES ('Stochastik');";
+            command.ExecuteNonQuery();
+            command.CommandText = "INSERT INTO EventLabel (nameOf) VALUES ('Stochastik 2');";
+            command.ExecuteNonQuery();
+
+            KKSysForms_Event.RepeatEvent testEvent = new KKSysForms_Event.RepeatEvent("Vorlesung", new KKSysForms_Event.TimeStamp(10, 30), new KKSysForms_Event.TimeStamp(12, 0), DayOfWeek.Monday, "", "");
+            command.CommandText = "INSERT INTO RepeatEvents (LabelID, nameOf,serialized,DayCode) VALUES (1,?,?,?);";
+            command.CreateParameter();
+            SQLiteParameter sQLiteParameter = new SQLiteParameter();
+            SQLiteParameter sQLiteParamete = new SQLiteParameter();
+            SQLiteParameter sQLiteParamet = new SQLiteParameter();
+            command.Parameters.Add(sQLiteParameter);
+            command.Parameters.Add(sQLiteParamete);
+            command.Parameters.Add(sQLiteParamet);
+            sQLiteParameter.Value = testEvent.Name;
+            ms = new MemoryStream();
+            bf.Serialize(ms, testEvent);
+            byte[] ser = ms.ToArray();
+            sQLiteParamete.Value = ser;
+            sQLiteParamet.Value = testEvent.dayCode;
+            command.ExecuteNonQuery();
+
         }
 
 
@@ -151,6 +239,8 @@ namespace KKSysDatabase
 
            
         }
+
+
         //Requires FilterOption
 
     }

@@ -7,14 +7,20 @@ namespace KKSysForms
     public partial class Form1 : Form
     {
 
-
+     
         public Form1()
         {
             InitializeComponent();
-
            
             
         }
+
+        public void setRt(string text)
+        {
+            this.richTextBox1.Text = text;
+        }
+
+        
 
      
      
@@ -29,7 +35,7 @@ namespace KKSysForms
 
         private void RichTextBox1_TextChanged(object sender, EventArgs e)
         {
-            Console.WriteLine();
+            
         }
 
         private void TextBox1_TextChanged(object sender, EventArgs e)

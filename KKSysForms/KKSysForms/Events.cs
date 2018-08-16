@@ -122,11 +122,9 @@ namespace KKSysForms_Event
         [NonSerialized]
         protected bool DeadLine;
 
-        [NonSerialized]
-        protected bool modified;
+        protected bool modified { get; set; }
 
-        [NonSerialized]
-        protected bool created;
+        protected bool created { get; set; }
 
         //Constructor for Creation and Deserialisation
         public Event(String name, TimeStamp start, TimeStamp end)
@@ -140,7 +138,7 @@ namespace KKSysForms_Event
             this.Name = name;
             this.Start = start;
             this.End = end;
-            this.created = true;
+            
         }
        
 
@@ -165,7 +163,8 @@ namespace KKSysForms_Event
 
     abstract class NonRepeatingEvents : Event
     {
-
+        //Filter
+        [NonSerialized]
         protected DateTime date;
 
         //Creator and Deserialization
@@ -179,11 +178,27 @@ namespace KKSysForms_Event
     [Serializable]
     class ReferencedOneTimeEvent : NonRepeatingEvents
     {
-        //TODO: Datatype
+        //Reference wird aus der Datenbank geladen
+        [NonSerialized]
         private RepeatEvent reference;
 
         public ReferencedOneTimeEvent(RepeatEvent reference, TimeStamp start, TimeStamp end, DateTime date) : base(reference.Name, start, end, date)
         {
+            this.reference = reference;
+            this.created = true;
+        }
+
+        public ReferencedOneTimeEvent(SerializationInfo info, StreamingContext context)
+            : base((String)info.GetValue("Name", typeof(string)),
+            new TimeStamp(
+                (int)info.GetValue("StartHour",
+                typeof(int)), (int)info.GetValue("StartMin", typeof(int))),
+            new TimeStamp((int)info.GetValue("EndHour", typeof(int)),
+                (int)info.GetValue("EndMin", typeof(int))),
+            (DateTime)info.GetDateTime("Date")
+             )
+        {
+            this.created = false;
 
         }
 
@@ -191,20 +206,45 @@ namespace KKSysForms_Event
 
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
-            throw new NotImplementedException();
+            
+            info.AddValue("StartMin", this.Start.m);
+            info.AddValue("StartHour", this.Start.h);
+            info.AddValue("EndMin", this.End.m);
+            info.AddValue("EndHour", this.End.h);
+            info.AddValue("Date", this.date);
         }
     }
     //Fuer Termine, welche nicht einen Termin verschieben (wie KLausuren, Extra Vorlesung etc)
     class NonReferencedOneTimeEvent : NonRepeatingEvents
     {
-        public NonReferencedOneTimeEvent(EventLabel lab, String name, TimeStamp start, TimeStamp end, DateTime date) : base(name, start, end, date)
+        public NonReferencedOneTimeEvent(String name, TimeStamp start, TimeStamp end, DateTime date) : base(name, start, end, date)
         {
-
+            this.created = true;
         }
+
+        public NonReferencedOneTimeEvent(SerializationInfo info, StreamingContext streamingContext)
+            :base((String)info.GetValue("Name", typeof(string)),
+            new TimeStamp(
+                (int)info.GetValue("StartHour",
+                typeof(int)), (int)info.GetValue("StartMin", typeof(int))),
+            new TimeStamp((int)info.GetValue("EndHour", typeof(int)),
+                (int)info.GetValue("EndMin", typeof(int))),
+            (DateTime)info.GetDateTime("Date"))
+
+        {
+            this.created = false;
+        }
+        
+
 
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
-            throw new NotImplementedException();
+            info.AddValue("Name", this.Name);
+            info.AddValue("StartMin", this.Start.m);
+            info.AddValue("StartHour", this.Start.h);
+            info.AddValue("EndMin", this.End.m);
+            info.AddValue("EndHour", this.End.h);
+            info.AddValue("Date", this.date);
         }
     }
 
@@ -231,7 +271,8 @@ namespace KKSysForms_Event
             
         }
 
-        public RepeatEvent(SerializationInfo info, StreamingContext streamingContext):base((String)info.GetValue("Name",typeof(string)),
+        public RepeatEvent(SerializationInfo info, StreamingContext streamingContext)
+            :base((String)info.GetValue("Name",typeof(string)),
             new TimeStamp(
                 (int)info.GetValue("StartHour",
                 typeof(int)),(int)info.GetValue("StartMin", typeof(int))),
@@ -239,7 +280,8 @@ namespace KKSysForms_Event
                 (int)info.GetValue("EndMin",typeof(int))))
         {
             this.location = (String)info.GetValue("LocationString", typeof(string));
-            this.additionalInformation = (String)info.GetString("AddtionNal");
+            this.additionalInformation = (String)info.GetString("AdditionNal");
+            this.created = false;
         }
 
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
