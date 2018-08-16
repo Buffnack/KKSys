@@ -99,6 +99,7 @@
     </Compile>
     <Compile Include="GeneratePDF.cs" />
     <Compile Include="KKSys.cs" />
+    <Compile Include="KKSysExceptions.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Run.cs" />

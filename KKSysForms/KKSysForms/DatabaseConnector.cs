@@ -80,7 +80,7 @@ namespace KKSysDatabase
             Queue<EventLabel> queue = new Queue<EventLabel>();
             //Liste mit den IDs -> sollte querey sein
             Queue<Int64> idOfEventAtPlace = new Queue<Int64>();
-            command.CommandText = "SELECT * FROM EventLabel";
+            command.CommandText = "SELECT * FROM EventLabel WHERE ID > 0";
 
             resultTable = command.ExecuteReader();
             String read = "";
@@ -106,7 +106,7 @@ namespace KKSysDatabase
             byte[] serialized;
             //Inaktive Events beachten! TODO
             //TODO: Maybe try to reduce this to one loop except for 3 Loops for all kinds of Events
-            while(idOfEventAtPlace.Count != 0)
+            while (idOfEventAtPlace.Count != 0)
             {
                 //This Command gets the serial of the label
                 searchId = idOfEventAtPlace.Dequeue();
@@ -117,14 +117,14 @@ namespace KKSysDatabase
                 el = queue.Dequeue();
                 //Die Ergebnis tabelle
                 resultTable = command.ExecuteReader();
-                
-                
-               
+
+
+
 
                 //Schleife, erste Zeile wurde bereitsgeladen
-                while(resultTable.Read())
+                while (resultTable.Read())
                 {
-                  
+
                     //ID vom Event - 
                     Int64 idOfEvent = (Int64)resultTable.GetInt64(0);
                     //Event Object 
@@ -143,17 +143,20 @@ namespace KKSysDatabase
 
 
 
-                } 
+                }
                 returnList.Add(el);
                 resultTable.Close();
 
-                
+
+                if (ms != null)
+                {
+                    ms.Dispose();
+                }
                
 
             }
             //Ressourcen freigeben
-            ms.Close();
-            ms.Dispose();
+           
            
 
             return returnList;
@@ -331,6 +334,10 @@ namespace KKSysDatabase
             }
         }
 
+        public KKSysForms_CardResultTable.CardStack GetCardsByFilter(KKSysForms_Filter.CardFilter filter)
+        {
+            return null;
+        }
         
 
         private DatabaseConnector()
@@ -343,7 +350,15 @@ namespace KKSysDatabase
 
             //Init Command
             command = new SQLiteCommand(connection);
-            initDatabase();
+            try
+            {
+                initDatabase();
+            }
+            catch (KKSysForms_Exceptions.SQL_DatabaseExistsException e)
+            {
+                
+            }
+           
 
             //if no exception, initialize all objects;
             bf = new BinaryFormatter();
@@ -476,7 +491,7 @@ namespace KKSysDatabase
             }
             catch (SQLiteException e)
             {
-                throw new Exception("Error in SQL-Code - Report Devs!" + e);
+                throw new KKSysForms_Exceptions.SQL_DatabaseExistsException();
             }
 
            

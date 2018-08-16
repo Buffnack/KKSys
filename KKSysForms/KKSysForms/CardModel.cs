@@ -31,31 +31,27 @@ namespace KKSysForms_CardModel
         private String answerHeader;
 
         //Maybe Composite?
-        private List<DataType> questionContent;
+        private CompositeDatatype questionContent;
 
-        private List<DataType> answerContent;
+        private CompositeDatatype answerContent;
 
         private List<String> tags;
 
-        public QACard(DataType question, DataType answer)
+        public QACard(CompositeDatatype question, CompositeDatatype answer)
         {
-            this.questionContent = new List<DataType>();
-            this.questionContent.Add(question);
-
-            this.answerContent = new List<DataType>();
-            this.answerContent.Add(answer);
+           
 
             this.tags = new List<String>();
         }
 
-        public void SetQuestionContent(DataType Content)
+        public void SetQuestionContent(Datatype Content)
         {
-            this.questionContent.Add(Content);
+            this.questionContent.AddComponent(Content);
         }
 
-        public void SetBackContent(DataType Content)
+        public void SetBackContent(Datatype Content)
         {
-            this.answerContent.Add(Content);
+            this.answerContent.AddComponent(Content);
         }
 
         public List<String> getTags()
