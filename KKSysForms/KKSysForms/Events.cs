@@ -79,13 +79,14 @@ namespace KKSysForms_Event
         public String Name { get; }
 
         private List<Event> eventsUnderLabel;
-        
 
-        public EventLabel(String label)
+        public bool created { get; set; }
+       
+        public EventLabel(String label, bool fromDatabase)
         {
             Name = label;
             this.eventsUnderLabel = new List<Event>();
-            
+            this.created = !fromDatabase;
             
         }
 
@@ -110,8 +111,9 @@ namespace KKSysForms_Event
     [Serializable]
     abstract class Event : ISerializable
     {
+        //Required to update specific Event if modfied is set
         [NonSerialized]
-        public int serialID;
+        public Int64 serialID;
 
         public TimeStamp Start { get; set; }
 
@@ -122,9 +124,9 @@ namespace KKSysForms_Event
         [NonSerialized]
         protected bool DeadLine;
 
-        protected bool modified { get; set; }
+        public bool modified { get; set; }
 
-        protected bool created { get; set; }
+        public bool created { get; set; }
 
         //Constructor for Creation and Deserialisation
         public Event(String name, TimeStamp start, TimeStamp end)
@@ -253,20 +255,21 @@ namespace KKSysForms_Event
     {
         //Filter-Option
         [NonSerialized]
-        public DayOfWeek dayCode;
+        public List<DayOfWeek> dayCode;
 
 
         private String location { get; set; }
 
         private String additionalInformation { get; set; }
 
-        public RepeatEvent(String name, TimeStamp start, TimeStamp end, DayOfWeek dayCode, String location, String additonalInformation) : base(name, start, end)
+        public RepeatEvent(String name, TimeStamp start, TimeStamp end, List<DayOfWeek> dayCode, String location, String additonalInformation) : base(name, start, end)
         {
-            
+
             this.dayCode = dayCode;
             
             this.location = location;
             this.additionalInformation = additionalInformation;
+            this.created = true;
             
             
         }

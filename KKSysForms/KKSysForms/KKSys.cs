@@ -32,12 +32,14 @@ namespace KKSysForms
         {
             database = DatabaseConnector.getInstance();
             today = DateTime.Now;
-            loadedLabel = database.InitialCallEventLabel();
+            loadedLabel = database.InitialCallEventLabel_Repeat();
 
 
             String tmp = "";
+            String whatIsIn = "";
             foreach (EventLabel tust in loadedLabel)
             {
+                
                 tmp = tmp + tust.Name+ " hat folgende Events:\n";
                 if (tust.getEventList() == null)
                 {
@@ -54,7 +56,7 @@ namespace KKSysForms
                         List<Event> tump = tust.getEventList();
                         foreach (Event testo in tump)
                         {
-                            tmp = tmp + testo.Name;
+                            tmp = tmp + testo.Name + " mit ID "+testo.serialID +"\n";
                         }
 
                     }
@@ -69,7 +71,7 @@ namespace KKSysForms
         {
             if (currentTarget != null)
             {
-                EventLabel tmpLabel = new EventLabel(name);
+                EventLabel tmpLabel = new EventLabel(name, false);
                 if (loadedLabel.Contains(tmpLabel))
                 {
                     throw new Exception("Dieses Label existiert schon");
@@ -81,7 +83,7 @@ namespace KKSysForms
             }
             else
             {
-                currentTarget = new EventLabel(name);
+                currentTarget = new EventLabel(name,false);
             }
         }
 
