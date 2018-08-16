@@ -9,11 +9,12 @@ namespace KKSysForms_Event
 {
     internal enum DayCode { Mon, Di, Mi, Do, Fr, Sa, So }
 
-    class TimeStamp
+    [Serializable]
+    class TimeStamp 
     {
-        private int h { get; }
+        public int h { get; }
 
-        private int m { get; }
+        public int m { get; }
 
         public TimeStamp(int h, int m)
         {
@@ -56,6 +57,19 @@ namespace KKSysForms_Event
 
         }
 
+        public bool Equals(TimeStamp timeStamp)
+        {
+            if (this.h == timeStamp.h)
+            {
+                if (this.m == timeStamp.m)
+                {
+                    return true;
+                }
+                return false;
+            }
+            return false;
+        }
+
     }
 
 
@@ -65,12 +79,14 @@ namespace KKSysForms_Event
         public String Name { get; }
 
         private List<Event> eventsUnderLabel;
-        
 
-        public EventLabel(String label)
+        public bool created { get; set; }
+       
+        public EventLabel(String label, bool fromDatabase)
         {
             Name = label;
             this.eventsUnderLabel = new List<Event>();
+            this.created = !fromDatabase;
             
         }
 
@@ -91,52 +107,53 @@ namespace KKSysForms_Event
 
         
     }
+
     [Serializable]
     abstract class Event : ISerializable
     {
+        //Required to update specific Event if modfied is set
+        [NonSerialized]
+        public Int64 serialID;
 
-        public int Start { get; set; }
+        public TimeStamp Start { get; set; }
 
-        public int End { get; set; }
+        public TimeStamp End { get; set; }
 
         public String Name { get; set; }
 
         [NonSerialized]
-        public EventLabel EventLabel;
+        protected bool DeadLine;
 
-        [NonSerialized]
-        protected bool modified;
+        public bool modified { get; set; }
 
-        [NonSerialized]
-        protected bool created;
+        public bool created { get; set; }
 
-        //Constructor for Creation
-        public Event(EventLabel label, String name, int start, int end)
+        //Constructor for Creation and Deserialisation
+        public Event(String name, TimeStamp start, TimeStamp end)
         {
 
-            this.EventLabel = label;
-            this.Name = name;
-            this.Start = start;
-            this.End = end;
-            this.created = true;
-        }
-        //For Deserialisation
-        public Event(String name, int start, int end)
-        {
-            this.Name = name;
-            this.Start = start;
-            this.End = end;
-        }
-
-        public void setModified()
-        {
-            if (created)
+            if (start.Equals(end))
             {
-                return;
+                this.DeadLine = true;
+            }
+
+            this.Name = name;
+            this.Start = start;
+            this.End = end;
+            
+        }
+       
+
+        //Datenbank schutz
+        public void SetModified()
+        {
+            if (!created)
+            {
+                this.modified = true;
             }
             else
             {
-                this.modified = true;
+                this.modified = false;
             }
         }
 
@@ -148,29 +165,42 @@ namespace KKSysForms_Event
 
     abstract class NonRepeatingEvents : Event
     {
-        
-        protected int numOfReplace { get; set; }
+        //Filter
+        [NonSerialized]
+        protected DateTime date;
 
-        //With Reference
-        public NonRepeatingEvents(EventLabel lab, String name, int start, int end, DateTime date) : base(lab, name, start, end)
+        //Creator and Deserialization
+        public NonRepeatingEvents(String name, TimeStamp start, TimeStamp end, DateTime date) : base(name, start, end)
         {
-
-        }
-
-        public NonRepeatingEvents(String name, int start, int end, DateTime date) : base(name, start, end)
-        {
-
+            this.date = date;
         }
 
     }
     //Fuer Termine, die mal verschoben werden (mit Ausfall)
+    [Serializable]
     class ReferencedOneTimeEvent : NonRepeatingEvents
     {
-        //TODO: Datatype
-        private Event reference;
+        //Reference wird aus der Datenbank geladen
+        [NonSerialized]
+        private RepeatEvent reference;
 
-        public ReferencedOneTimeEvent(Event reference, int start, int end, DateTime date) : base(reference.EventLabel, reference.Name, start, end, date)
+        public ReferencedOneTimeEvent(RepeatEvent reference, TimeStamp start, TimeStamp end, DateTime date) : base(reference.Name, start, end, date)
         {
+            this.reference = reference;
+            this.created = true;
+        }
+
+        public ReferencedOneTimeEvent(SerializationInfo info, StreamingContext context)
+            : base((String)info.GetValue("Name", typeof(string)),
+            new TimeStamp(
+                (int)info.GetValue("StartHour",
+                typeof(int)), (int)info.GetValue("StartMin", typeof(int))),
+            new TimeStamp((int)info.GetValue("EndHour", typeof(int)),
+                (int)info.GetValue("EndMin", typeof(int))),
+            (DateTime)info.GetDateTime("Date")
+             )
+        {
+            this.created = false;
 
         }
 
@@ -178,40 +208,99 @@ namespace KKSysForms_Event
 
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
-            throw new NotImplementedException();
+            
+            info.AddValue("StartMin", this.Start.m);
+            info.AddValue("StartHour", this.Start.h);
+            info.AddValue("EndMin", this.End.m);
+            info.AddValue("EndHour", this.End.h);
+            info.AddValue("Date", this.date);
         }
     }
     //Fuer Termine, welche nicht einen Termin verschieben (wie KLausuren, Extra Vorlesung etc)
     class NonReferencedOneTimeEvent : NonRepeatingEvents
     {
-        public NonReferencedOneTimeEvent(EventLabel lab, String name, int start, int end, DateTime date) : base(lab, name, start, end, date)
+        public NonReferencedOneTimeEvent(String name, TimeStamp start, TimeStamp end, DateTime date) : base(name, start, end, date)
         {
-
+            this.created = true;
         }
+
+        public NonReferencedOneTimeEvent(SerializationInfo info, StreamingContext streamingContext)
+            :base((String)info.GetValue("Name", typeof(string)),
+            new TimeStamp(
+                (int)info.GetValue("StartHour",
+                typeof(int)), (int)info.GetValue("StartMin", typeof(int))),
+            new TimeStamp((int)info.GetValue("EndHour", typeof(int)),
+                (int)info.GetValue("EndMin", typeof(int))),
+            (DateTime)info.GetDateTime("Date"))
+
+        {
+            this.created = false;
+        }
+        
+
 
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
-            throw new NotImplementedException();
+            info.AddValue("Name", this.Name);
+            info.AddValue("StartMin", this.Start.m);
+            info.AddValue("StartHour", this.Start.h);
+            info.AddValue("EndMin", this.End.m);
+            info.AddValue("EndHour", this.End.h);
+            info.AddValue("Date", this.date);
         }
     }
 
-
-    class Lecture : Event
+    [Serializable]
+    class RepeatEvent : Event
     {
-        public DayOfWeek dayCode;
-        private int Start; //1030
-        // Nutzer: Start = 10, dauer 45min --> Ende wurde nicht angegeben, aber es ist eine Lecture, -> Ende = Start ^Dauer
+        //Filter-Option
+        [NonSerialized]
+        public List<DayOfWeek> dayCode;
+
+
         private String location { get; set; }
+
         private String additionalInformation { get; set; }
 
-        public Lecture(EventLabel lab,String name, int start, int end, DayOfWeek dayCode, String location, String additonalInformation) : base(lab,name, start, end)
+        public RepeatEvent(String name, TimeStamp start, TimeStamp end, List<DayOfWeek> dayCode, String location, String additonalInformation) : base(name, start, end)
         {
 
+            this.dayCode = dayCode;
+            
+            this.location = location;
+            this.additionalInformation = additionalInformation;
+            this.created = true;
+            
+            
+        }
+
+        public RepeatEvent(SerializationInfo info, StreamingContext streamingContext)
+            :base((String)info.GetValue("Name",typeof(string)),
+            new TimeStamp(
+                (int)info.GetValue("StartHour",
+                typeof(int)),(int)info.GetValue("StartMin", typeof(int))),
+            new TimeStamp((int)info.GetValue("EndHour",typeof(int)),
+                (int)info.GetValue("EndMin",typeof(int))))
+        {
+            this.location = (String)info.GetValue("LocationString", typeof(string));
+            this.additionalInformation = (String)info.GetString("AdditionNal");
+            this.created = false;
         }
 
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
-            throw new NotImplementedException();
+            info.AddValue("Name", this.Name);
+            info.AddValue("StartMin", this.Start.m);
+            info.AddValue("StartHour", this.Start.h);
+            info.AddValue("EndMin", this.End.m);
+            info.AddValue("EndHour", this.End.h);
+            //This class based shit
+
+            info.AddValue("LocationString", this.location);
+            info.AddValue("AdditionNal", this.additionalInformation);
+
+
+
         }
     }
 

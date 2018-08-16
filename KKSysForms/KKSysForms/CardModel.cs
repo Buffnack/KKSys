@@ -5,6 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using KKSysForms_DataTypes;
 
+//TODO: Composite pattern
+//TODO: Fill this class
 namespace KKSysForms_CardModel
 {
     abstract class Card
@@ -28,6 +30,7 @@ namespace KKSysForms_CardModel
 
         private String answerHeader;
 
+        //Maybe Composite?
         private List<DataType> questionContent;
 
         private List<DataType> answerContent;
