@@ -8,6 +8,9 @@ using System.Collections.Generic;
 using System.Runtime.Serialization;
 
 //Rebuild this into Composite
+//TODO: Overloaed berechnung
+//Backpack
+//TODO: Geneuere Implementierung
 namespace KKSysForms_DataTypes
 {
 
@@ -20,14 +23,14 @@ namespace KKSysForms_DataTypes
         }
 
         //What kind of operation they need?
-        public abstract void Draw();
+        public abstract void ToTex();
 
 
     }
 
     class Text : Datatype
     {
-        public override void Draw()
+        public override void ToTex()
         {
             throw new NotImplementedException();
         }
@@ -35,7 +38,7 @@ namespace KKSysForms_DataTypes
 
     class Graphics : Datatype
     {
-        public override void Draw()
+        public override void ToTex()
         {
             throw new NotImplementedException();
         }
@@ -43,7 +46,7 @@ namespace KKSysForms_DataTypes
 
     class MathMode : Datatype
     {
-        public override void Draw()
+        public override void ToTex()
         {
             throw new NotImplementedException();
         }
@@ -63,7 +66,7 @@ namespace KKSysForms_DataTypes
             this.components.Add(elem);
         }
 
-        public override void Draw()
+        public override void ToTex()
         {
             throw new NotImplementedException();
         }

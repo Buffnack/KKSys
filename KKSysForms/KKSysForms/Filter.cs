@@ -28,6 +28,7 @@ namespace KKSysForms_Filter
         protected abstract String generateSQLCreateView();
     }
     //Definetly check it with Franz
+    //REwork THIS!
     class CardFilter : Filter
     {
         private bool isContent { get; set; }
@@ -130,15 +131,15 @@ namespace KKSysForms_Filter
 
         //If null, show all for day
         //If not null, ignore DayOfWeek and show all with eventLabel
-        public EventLabel EventLabel { get; set; }
+        public String EventLabelName { get; set; }
 
         //If null, set it to "No Day"
-        public string DayCode { get; set; }
+        public String DayCode { get; set; }
 
         //What about Date later than exspected?
         public DateTime Date { get; set; }
 
-        public bool ReplacedEvents { get; set; }
+        
 
 
         public EventFilter()
@@ -146,14 +147,15 @@ namespace KKSysForms_Filter
             this.noFilter = false;
             
             
-            this.EventLabel = null;
+            this.EventLabelName = null;
         }
 
+        //SHould be used for holding the last Statement
         protected override string generateSQLCreateView()
         {
             throw new NotImplementedException();
         }
-
+        //Should be used to select the filter
         protected override string generateSQLFrom()
         {
             throw new NotImplementedException();
