@@ -19,18 +19,26 @@ namespace KKSysForms
 
         private EventLabel currentTarget;
 
-        public List<EventLabel> loadedLabel;
+        //Need to be static
+        public static List<EventLabel> loadedLabel;
 
         public DateTime today;
 
         //Nicht brauchbar
         private Filter Eventfilter;
 
-        static bool allStored
+        public static bool Stored
         {
-            set
-            {
-
+            get { return Stored; }
+            set { if (value)
+                {
+                    DatabaseConnector.getInstance().InsertData(loadedLabel);
+                    Stored = value;
+                }
+                else
+                {
+                    Stored = value;
+                }
             }
         }
         
@@ -118,7 +126,7 @@ namespace KKSysForms
             {
                 List<Event> unsortedList = new List<Event>();
                 List<Event> tmp = new List<Event>();
-                foreach (EventLabel el in this.loadedLabel)
+                foreach (EventLabel el in loadedLabel)
                 {
                     tmp = el.getEventList();
                     foreach (Event ev in tmp)

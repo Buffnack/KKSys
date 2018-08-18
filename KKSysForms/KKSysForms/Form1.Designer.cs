@@ -156,7 +156,6 @@ namespace KKSysForms
             this.textBox2.Name = "textBox2";
             this.textBox2.Size = new System.Drawing.Size(100, 31);
             this.textBox2.TabIndex = 6;
-          
             // 
             // textBox4
             // 
@@ -205,6 +204,7 @@ namespace KKSysForms
             this.Name = "Form1";
             this.Text = "Form1";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.Form1_FormClosed);
+            this.Load += new System.EventHandler(this.Form1_Load);
             this.contextMenuStrip1.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
