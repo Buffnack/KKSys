@@ -162,9 +162,28 @@ namespace KKSysForms_CardModel
     [Serializable]
     class ContentCard : Card
     {
-        public ContentCard()
-        {
+        public String header;
 
+        public CompositeDataType content { get; set; }
+
+        [NonSerialized]
+        private List<Tag> tags { get; }
+
+        public ContentCard(String header,  CompositeDataType content)
+        {
+            this.header = header;
+            this.content = content;
+            this.tags = new List<Tag>();
+        }
+
+        public void addTag(Tag tag)
+        {
+            this.tags.Add(tag);
+        }
+
+        public void removeTag(Tag tag)
+        {
+            this.tags.Remove(tag);
         }
 
         public ContentCard(SerializationInfo info, StreamingContext context)
@@ -176,27 +195,28 @@ namespace KKSysForms_CardModel
         {
             throw new NotImplementedException();
         }
+
     }
 
     [Serializable]
     class QACard : Card
     {
-        
-        private String questionHeader;
 
+        public String questionHeader;
 
-        private String answerHeader;
+        public String answerHeader;
 
-        private CompositeDatatype questionContent;
+        public CompositeDatatype questionContent;
 
-        private CompositeDatatype answerContent;
+        public CompositeDatatype answerContent;
 
         [NonSerialized]
-        private List<Tag> tags;
+        private List<Tag> tags { get; }
 
-        public QACard(CompositeDatatype question, CompositeDatatype answer)
+        public QACard(String questHead, String ansHead, CompositeDatatype question, CompositeDatatype answer)
         {
-
+            this.questionHeader = questHead;
+            this.answerHeader = ansHead;
             this.questionContent = question;
             this.answerContent = answer;
             this.tags = new List<Tag>();
@@ -212,14 +232,9 @@ namespace KKSysForms_CardModel
             this.questionContent.AddComponent(Content);
         }
 
-        public void SetBackContent(Datatype Content)
+        public void SetAnswerContent(Datatype Content)
         {
             this.answerContent.AddComponent(Content);
-        }
-
-        public List<Tag> getTags()
-        {
-            return this.tags;
         }
 
         public void addTag(Tag tag)
