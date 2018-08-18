@@ -13,7 +13,7 @@ namespace KKSysForms_SerializeBoundModul
 
         static BinaryFormatter bf = new BinaryFormatter();
 
-        public static void KillMemoryStream ()
+        private static void KillMemoryStream ()
         {
             ms.Close();
             ms.Dispose();

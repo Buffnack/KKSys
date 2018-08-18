@@ -23,9 +23,16 @@ namespace KKSysForms
 
         public DateTime today;
 
+        //Nicht brauchbar
         private Filter Eventfilter;
 
+        static bool allStored
+        {
+            set
+            {
 
+            }
+        }
         
 
         public KKSys(Form1 test)
