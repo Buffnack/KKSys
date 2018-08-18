@@ -67,11 +67,11 @@ namespace KKSysDatabase
         public void InsertData(List<EventLabel> insert)
         {
             //TagList woher?
-            InsertReferences(insert, null);
+            InsertReferences(insert);
             foreach (EventLabel el in insert)
             {
                 InsertEvents(el);
-                InsertCard(el, null);
+                InsertCard(el);
             }
            
             //Wie bekommen wir die Tags hierhin?
@@ -191,9 +191,58 @@ namespace KKSysDatabase
             return null;
         }
 
-        private void InsertReferences(List<EventLabel> labels, List<Tag> tagList)
+        //Tags still missing
+        private void InsertReferences(List<EventLabel> labels)
         {
+            ResetCommand();
+            foreach (EventLabel el in labels)
+            {
+                if (el.ICreated)
+                {
+                    command.CommandText = "INSERT INTO EventLabel (nameOf) VALUES ('" + el.Name + "');";
+                    command.ExecuteNonQuery();
+                    command.CommandText = "SELECT ID From EventLabel where nameOf = '" + el.Name + "';";
+                    resultTable = command.ExecuteReader();
+                    resultTable.Read();
+                    el.IDatabaseID = resultTable.GetInt64(0);
+                    resultTable.Close();
+                    el.ICreated = false;
+                    el.IModified = false;
+                }
+                else if (el.IModified)
+                {
+                    command.CommandText = "UPDATE EventLabel SET nameOf = '" + el.Name + "' where ID = " + el.IDatabaseID + ";";
+                    command.ExecuteNonQuery();
+                    el.ICreated = false;
+                    el.IModified = false;
+                }
 
+                List<Theme> themeList = el.getThemeList();
+                foreach (Theme th in themeList)
+                {
+                    if (th.ICreated)
+                    {
+                        command.CommandText = "INSERT INTO Thema (nameOf, belongsTo) VALUES ('" + th.ThemeName + "', " + el.IDatabaseID + ");";
+                        command.ExecuteNonQuery();
+                        command.CommandText = "SELECT ID From EventLabel where nameOf = '" + th.ThemeName + "' and belongsTo = " + el.IDatabaseID + ";";
+                        resultTable = command.ExecuteReader();
+                        resultTable.Read();
+                        th.IDatabaseID = resultTable.GetInt64(0);
+                        resultTable.Close();
+                        th.ICreated = false;
+                        th.IModified = false;
+
+                    }
+                    else if (th.IModified)
+                    {
+                        command.CommandText = "UPDATE Thema SET nameOf = '" + th.ThemeName + "', belongsTo = "+el.IDatabaseID+" where ID = " + th.IDatabaseID + ";";
+                        command.ExecuteNonQuery();
+                        el.ICreated = false;
+                        el.IModified = false;
+                    }
+                }
+
+            }
         }
         //TODO: Change to private
         //Auskapsel von EventLabel insert!
@@ -205,18 +254,6 @@ namespace KKSysDatabase
           
             
             eventList = el.getEventList();
-            if (el.ICreated)
-            {
-                command.CommandText = "INSERT INTO EventLabel (nameOf) VALUES ('" + el.Name + "');";
-                command.ExecuteNonQuery();
-                command.CommandText = "SELECT ID FROM EventLabel WHERE nameOf = '" + el.Name + "';";
-                resultTable = command.ExecuteReader();
-                resultTable.Read();
-                el.IDatabaseID = resultTable.GetInt64(0);
-                resultTable.Close();
-                    
-                        
-            }
                
             foreach (Event ev in eventList)
             {
@@ -360,9 +397,10 @@ namespace KKSysDatabase
                 
             }
         }
-        //TODO: Change InsertEvents to private -> public void InsertData(List<EventLabel> ...){}
+        
         //Kapsel Eventlabel update/Insert aus aus beiden FUnktionen
-        private void InsertCard(EventLabel el, List<Tag> tagList)
+        //TODO: Tags besser definiert!
+        private void InsertCard(EventLabel el)
         {
             ResetCommand();
             //Ausgehend davon, das die Labels schon eingelagert worden sind und geupdatet
@@ -377,6 +415,7 @@ namespace KKSysDatabase
                 cardList.AddRange(th.GetQA());
                 foreach (Card ca in cardList)
                 {
+                    ResetCommand();
                     if (ca.ICreated)
                     {
                         //Find right tabular
@@ -384,14 +423,30 @@ namespace KKSysDatabase
                         {
                             cc = (ContentCard)ca;
                             //Insert into contentCard
+                            command.CommandText = "INSERT INTO ContentCards (ThemeID,Tag, serialized) VALUES (" + th.IDatabaseID + ",0, ?);";
+                            command.CreateParameter();
+                            SQLiteParameter param = new SQLiteParameter();
+                            command.Parameters.Add(param);
+                            param.Value = Serialize.GetSerializeByte(cc);
+
+                            command.ExecuteNonQuery();
+
                         }
                         else if (ca is QACard)
                         {
                             qa = (QACard)ca;
+                            //InSert into QA
+                            command.CommandText = "INSERT INTO QACard (ThemeID,Tag, serialized) VALUES (" + th.IDatabaseID + ",0, ?);";
+                            command.CreateParameter();
+                            SQLiteParameter param = new SQLiteParameter();
+                            command.Parameters.Add(param);
+                            param.Value = Serialize.GetSerializeByte(qa);
+
+                            command.ExecuteNonQuery();
                         }
                         else
                         {
-
+                            throw new Exception("Developers haben wieder mistgebaut...");
                         }
 
                     }
@@ -403,11 +458,18 @@ namespace KKSysDatabase
                         {
                             cc = (ContentCard)ca;
                             //Insert into contentCard
+                            command.CommandText = "UPDATE ContentCards SET ThemeID = " + th.IDatabaseID + ", Tag = 0, serialized = ? where ID = " + cc.IDatabaseID + ";";
+                            command.CreateParameter();
+                            SQLiteParameter param = new SQLiteParameter();
+                            command.Parameters.Add(param);
+                            param.Value = Serialize.GetSerializeByte(cc);
+                            command.ExecuteNonQuery();
                         }
                         else if (ca is QACard)
                         {
+                            //TODO: Tags are currently 0 evrytime
                             qa = (QACard)ca;
-                            command.CommandText = "UPDATE QACard SET ThemeID = " + th.IDatabaseID + ", Tag = '"+qa.getTags().ToString()+"', serialized = ?";
+                            command.CommandText = "UPDATE QACard SET ThemeID = " + th.IDatabaseID + ", Tag = 0, serialized = ?  where ID = "+qa.IDatabaseID+";";
                             command.CreateParameter();
                             SQLiteParameter param = new SQLiteParameter();
 
