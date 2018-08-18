@@ -164,12 +164,12 @@ namespace KKSysForms_CardModel
     {
         public String header;
 
-        public CompositeDataType content { get; set; }
+        public CompositeDatatype content { get; set; }
 
-        [NonSerialized]
+     
         private List<Tag> tags { get; }
 
-        public ContentCard(String header,  CompositeDataType content)
+        public ContentCard(String header,  CompositeDatatype content)
         {
             this.header = header;
             this.content = content;
@@ -210,7 +210,6 @@ namespace KKSysForms_CardModel
 
         public CompositeDatatype answerContent;
 
-        [NonSerialized]
         private List<Tag> tags { get; }
 
         public QACard(String questHead, String ansHead, CompositeDatatype question, CompositeDatatype answer)
