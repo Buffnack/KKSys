@@ -356,7 +356,7 @@ namespace KKSysDatabase
                         
 
                     }
-                    else if (tmpCard.IModiefied)
+                    else if (tmpCard.IModified)
                     {
                         //Update into database using IDatabaseID
                     }
@@ -374,7 +374,7 @@ namespace KKSysDatabase
                     {
                         //Insert into Database
                     }
-                    else if (tmpCard.IModiefied)
+                    else if (tmpCard.IModified)
                     {
                         //Update into database using IDatabaseID
                     }
