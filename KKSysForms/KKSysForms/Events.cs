@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
+using KKSysForms_CardModel;
 
 
 //Std value for start end
@@ -99,6 +100,7 @@ namespace KKSysForms_Event
         }
 
         private List<Event> eventsUnderLabel;
+        private List<Theme> themeUnderLabel;
 
         public long IDatabaseID
         {
@@ -121,6 +123,7 @@ namespace KKSysForms_Event
         {
             Name = label;
             this.eventsUnderLabel = new List<Event>();
+            this.themeUnderLabel = new List<Theme>();
             this.ICreated = !fromDatabase;
             
         }
@@ -135,9 +138,16 @@ namespace KKSysForms_Event
             this.eventsUnderLabel.Remove(@event);
         }
 
+
+
         public List<Event> getEventList()
         {
             return this.eventsUnderLabel;
+        }
+
+        public List<Theme> getThemeList()
+        {
+            return this.themeUnderLabel;
         }
 
         

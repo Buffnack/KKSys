@@ -5,7 +5,7 @@ using System.Collections.Generic;
 namespace KKSysForms_CardResultTable
 {
   
-
+    //Rework
     class CardStack
     {
         public LinkedList<KKSysForms_CardModel.ContentCard> ContentList
@@ -48,7 +48,7 @@ namespace KKSysForms_CardResultTable
             }
         }
 
-        public KKSysForms_CardModel.Card currentCard;
+        
 
         public CardStack()
         {
