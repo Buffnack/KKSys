@@ -123,7 +123,7 @@ namespace KKSysForms
             // 
             this.contextMenuStrip2.ImageScalingSize = new System.Drawing.Size(32, 32);
             this.contextMenuStrip2.Name = "contextMenuStrip2";
-            this.contextMenuStrip2.Size = new System.Drawing.Size(301, 48);
+            this.contextMenuStrip2.Size = new System.Drawing.Size(61, 4);
             // 
             // Form1
             // 
@@ -136,6 +136,7 @@ namespace KKSysForms
             this.Controls.Add(this.textBox1);
             this.Name = "Form1";
             this.Text = "Form1";
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.Form1_FormClosed);
             this.contextMenuStrip1.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();

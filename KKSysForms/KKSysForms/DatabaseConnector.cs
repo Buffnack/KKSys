@@ -4,6 +4,7 @@ using System.Runtime.Serialization.Formatters.Binary;
 using System.Collections.Generic;
 using System.IO;
 using KKSysForms_Event;
+using KKSysForms_CardModel;
 //Webserver database (SQL Server 2000 +)
 //using System.Data.SqlClient;
 //Connection driver for legacy Databases (possible unused) 
@@ -27,6 +28,8 @@ namespace KKSysDatabase
    //Anlegen der Datenbank
    //Auslesen der Datenbank (wiederholende nur
    //Fehlt: Onetime events
+   //Befuerchtung: Synchroner Aufruf wuerde kollidieren mit der GUI: Sprich keine Reaktion solange gewartet wird
+   //Sollte daher in einem Thread ablaufen
     class DatabaseConnector
     {
         public static List<KKSysForms_CardModel.Card> AddToDatabase = new List<KKSysForms_CardModel.Card>();
@@ -135,7 +138,7 @@ namespace KKSysDatabase
                     ms.Close();
 
                     //Setzen der serial fuer spaeter
-                    tempEvent.serialID = idOfEvent;
+                    tempEvent.IDatabaseID = idOfEvent;
                     //Haengen das Event an das Eventlaebel an
                     el.addEvent(tempEvent);
                     tempEvent = null;
@@ -169,6 +172,8 @@ namespace KKSysDatabase
             return null;
         }
 
+
+
         public void InsertEvents(List<EventLabel> labledEvents)
         {
             ResetCommand();
@@ -177,7 +182,7 @@ namespace KKSysDatabase
             foreach (EventLabel el in labledEvents)
             {
                 eventList = el.getEventList();
-                if (el.created)
+                if (el.ICreated)
                 {
                     command.CommandText = "INSERT INTO EventLabel (nameOf) VALUES ('" + el.Name + "');";
                     command.ExecuteNonQuery();
@@ -194,7 +199,7 @@ namespace KKSysDatabase
                     if (ev is RepeatEvent)
                     {
                         RepeatEvent re = (RepeatEvent)ev;
-                        if (re.created)
+                        if (re.ICreated)
                         {
                             String dayCode = generateDayCodeKurz(re.dayCode);
                             command.CommandText = "INSERT INTO RepeatEvents (LabelId, NameOf, serialized,DayCode) VALUES (" + eventLabelId + ",'" + ev.Name + "',?,'" + dayCode + "');";
@@ -210,13 +215,13 @@ namespace KKSysDatabase
 
                             command.ExecuteNonQuery();
                         }
-                        else if (ev.modified)
+                        else if (re.IModified)
                         {
                             bool updateDay = false;
                             bool updateName = false;
                             bool updateLabel = false;
 
-                            Int64 serial = re.serialID;
+                            Int64 serial = re.IDatabaseID;
                             command.CommandText = "SELECT LabelID,nameOf, DayCode FROM RepeatEvents WHERE ID =" + serial + ";";
 
                             resultTable = command.ExecuteReader();
@@ -250,7 +255,7 @@ namespace KKSysDatabase
                             //Checking, Label has to be updated
                             resultTable.Close();
                             Int64 currentLabelID = 0;
-                            if (el.created)
+                            if (el.ICreated)
                             {
                                 updateLabel = true;
                             }
@@ -272,7 +277,7 @@ namespace KKSysDatabase
                             if (updateLabel)
                             {
 
-                                if (el.created)
+                                if (el.ICreated)
                                 {
                                     command.CommandText = "INSERT INTO EventLabel (nameOf) VALUES ('" + el.Name + "');";
                                     command.ExecuteNonQuery();
@@ -288,7 +293,7 @@ namespace KKSysDatabase
 
                             if (updateName)
                             {
-                                cmdGen = cmdGen + "nameOf = '" + ev.Name + "',";
+                                cmdGen = cmdGen + "nameOf = '" + re.Name + "',";
                             }
                             if (updateDay)
                             {
@@ -300,7 +305,7 @@ namespace KKSysDatabase
                             bf.Serialize(ms, re);
                             byte[] data = ms.ToArray();
                             ms.Close();
-                            cmdGen = cmdGen + "serialized = ? WHERE ID = " + ev.serialID+";";
+                            cmdGen = cmdGen + "serialized = ? WHERE ID = " + re.IDatabaseID+";";
                             SQLiteParameter param = new SQLiteParameter();
                             command.CommandText = cmdGen;
                             command.Parameters.Add(param);
@@ -334,10 +339,56 @@ namespace KKSysDatabase
             }
         }
 
-        public KKSysForms_CardResultTable.CardStack GetCardsByFilter(KKSysForms_Filter.CardFilter filter)
+        public void InsertCard(KKSysForms_CardResultTable.CardStack cardStack)
         {
-            return null;
+            ResetCommand();
+            List<Card> tmpList = cardStack.GetCardPack();
+            
+            foreach (Card card in tmpList)
+            {
+                if (card is ContentCard)
+                {
+                    ContentCard tmpCard = (ContentCard)card;
+                    if (tmpCard.ICreated)
+                    {
+                        //Insert into Database
+                        //Maybe Tag ID List before n* database access
+                        
+
+                    }
+                    else if (tmpCard.IModiefied)
+                    {
+                        //Update into database using IDatabaseID
+                    }
+                    else
+                    {
+                        //Skip if not Created either modified
+                        continue;
+                    }
+
+                }
+                else if (card is QACard)
+                {
+                    QACard tmpCard = (QACard)card;
+                    if (tmpCard.ICreated)
+                    {
+                        //Insert into Database
+                    }
+                    else if (tmpCard.IModiefied)
+                    {
+                        //Update into database using IDatabaseID
+                    }
+                    else
+                    {
+                        //Skip if not Created either modified
+                        continue;
+                    }
+                }
+
+            }
         }
+
+        
         
 
         private DatabaseConnector()
