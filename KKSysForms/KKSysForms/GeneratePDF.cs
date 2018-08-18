@@ -11,13 +11,14 @@ namespace KKSysForms_PDFCreate
     {
         public static FileStream fs;
 
-        public static String texPages;
-
+        //Sollte Nutzung der Klasse, Page definition beinhalten
         private const String TEX_HEADER = "";
 
-        private const String TEX_END = "";
+        
+        private const String TEX_END = "\\end{document}";
 
-        private const String TEX_LAYOUT = "";
+        //Weitere Tex Constants hierhin - sowas wie }{ etc
+        
 
         
 

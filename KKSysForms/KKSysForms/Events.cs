@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
+using KKSysForms_CardModel;
 
 
 //Std value for start end
 //TODO: ANstehende Events sollen eine View bekommen in der Database
+//TODO: Nutze IDatabase
 namespace KKSysForms_Event
 {
     internal enum DayCode { Mon, Di, Mi, Do, Fr, Sa, So }
@@ -74,19 +76,55 @@ namespace KKSysForms_Event
 
 
     //Enthaelt Information ueber das Label mehrere Veranstaltungen
-    class EventLabel
+    class EventLabel : KKSysForms_Interfaces.IKKSysDatabaseInterface
     {
-        public String Name { get; }
+        public String Name
+        {
+            get
+            {
+                return Name;
+            }
+            set
+            {
+                if (ICreated)
+                {
+                    Name = value;
+                }
+                else
+                {
+                    IModified = true;
+                    Name = value;
+                }
+
+            }
+        }
 
         private List<Event> eventsUnderLabel;
+        private List<Theme> themeUnderLabel;
 
-        public bool created { get; set; }
-       
+        public long IDatabaseID
+        {
+            get => IDatabaseID;
+            set => IDatabaseID = value;
+        }
+
+        public bool ICreated
+        {
+            get => ICreated;
+            set => ICreated = true;
+        }
+        public bool IModified
+        {
+            get => IModified;
+            set => IModified = value;
+        }
+
         public EventLabel(String label, bool fromDatabase)
         {
             Name = label;
             this.eventsUnderLabel = new List<Event>();
-            this.created = !fromDatabase;
+            this.themeUnderLabel = new List<Theme>();
+            this.ICreated = !fromDatabase;
             
         }
 
@@ -100,38 +138,97 @@ namespace KKSysForms_Event
             this.eventsUnderLabel.Remove(@event);
         }
 
+
+
         public List<Event> getEventList()
         {
             return this.eventsUnderLabel;
+        }
+
+        public List<Theme> getThemeList()
+        {
+            return this.themeUnderLabel;
         }
 
         
     }
 
     [Serializable]
-    abstract class Event : ISerializable
+    abstract class Event : ISerializable, KKSysForms_Interfaces.IKKSysDatabaseInterface
     {
         //Required to update specific Event if modfied is set
-        [NonSerialized]
-        public Int64 serialID;
+        
 
-        public TimeStamp Start { get; set; }
+        public TimeStamp Start {
+            get
+            {
+                return Start;
+            }
+            set
+            {
+                Start = value;
+                if (!ICreated && IDatabaseID != 0)
+                {
+                    IModified = true;
+                }
+            } }
 
-        public TimeStamp End { get; set; }
+        public TimeStamp End
+        {
+            get
+            {
+                return End;
+            }
+            set
+            {
+                End = value;
+                if (!ICreated && IDatabaseID != 0)
+                {
+                    IModified = true;
+                }
+            }
+        }
 
-        public String Name { get; set; }
+        public String Name
+        {
+            get
+            {
+                return Name;
+            }
+            set
+            {
+                Name = value;
+                if (!ICreated && IDatabaseID != 0)
+                {
+                    IModified = true;
+                }
+            }
+        }
 
         [NonSerialized]
         protected bool DeadLine;
 
-        public bool modified { get; set; }
+        public long IDatabaseID
+        {
+            get => IDatabaseID;
+            set => IDatabaseID = value;
+        }
 
-        public bool created { get; set; }
+        public bool ICreated
+        {
+            get => ICreated;
+            set => ICreated = true;
+        }
+        public bool IModified
+        {
+            get => IModified;
+            set => IModified = value;
+        }
 
         //Constructor for Creation and Deserialisation
         public Event(String name, TimeStamp start, TimeStamp end)
         {
-
+            
             if (start.Equals(end))
             {
                 this.DeadLine = true;
@@ -140,22 +237,10 @@ namespace KKSysForms_Event
             this.Name = name;
             this.Start = start;
             this.End = end;
+
             
         }
        
-
-        //Datenbank schutz
-        public void SetModified()
-        {
-            if (!created)
-            {
-                this.modified = true;
-            }
-            else
-            {
-                this.modified = false;
-            }
-        }
 
         public abstract void GetObjectData(SerializationInfo info, StreamingContext context);
 
@@ -187,7 +272,7 @@ namespace KKSysForms_Event
         public ReferencedOneTimeEvent(RepeatEvent reference, TimeStamp start, TimeStamp end, DateTime date) : base(reference.Name, start, end, date)
         {
             this.reference = reference;
-            this.created = true;
+            this.ICreated = true;
         }
 
         public ReferencedOneTimeEvent(SerializationInfo info, StreamingContext context)
@@ -200,7 +285,7 @@ namespace KKSysForms_Event
             (DateTime)info.GetDateTime("Date")
              )
         {
-            this.created = false;
+            this.ICreated = false;
 
         }
 
@@ -221,7 +306,7 @@ namespace KKSysForms_Event
     {
         public NonReferencedOneTimeEvent(String name, TimeStamp start, TimeStamp end, DateTime date) : base(name, start, end, date)
         {
-            this.created = true;
+            this.ICreated = true;
         }
 
         public NonReferencedOneTimeEvent(SerializationInfo info, StreamingContext streamingContext)
@@ -234,7 +319,7 @@ namespace KKSysForms_Event
             (DateTime)info.GetDateTime("Date"))
 
         {
-            this.created = false;
+            this.ICreated = false;
         }
         
 
@@ -269,7 +354,7 @@ namespace KKSysForms_Event
             
             this.location = location;
             this.additionalInformation = additionalInformation;
-            this.created = true;
+            this.ICreated = true;
             
             
         }
@@ -284,7 +369,7 @@ namespace KKSysForms_Event
         {
             this.location = (String)info.GetValue("LocationString", typeof(string));
             this.additionalInformation = (String)info.GetString("AdditionNal");
-            this.created = false;
+            this.ICreated = false;
         }
 
         public override void GetObjectData(SerializationInfo info, StreamingContext context)

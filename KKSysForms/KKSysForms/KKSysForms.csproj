@@ -99,9 +99,11 @@
     </Compile>
     <Compile Include="GeneratePDF.cs" />
     <Compile Include="KKSys.cs" />
+    <Compile Include="KKSysExceptions.cs" />
+    <Compile Include="KKSysInterfaces.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Run.cs" />
+    <Compile Include="Serialize.cs" />
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>

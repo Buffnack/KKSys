@@ -4,67 +4,75 @@ using System.Collections.Generic;
 
 namespace KKSysForms_CardResultTable
 {
+  
+    //Rework
     class CardStack
     {
-        private KKSysDatabase.DatabaseConnector databaseConnector;
-        private LinkedList<KKSysForms_CardModel.ContentCard> contentList;
-
-        private LinkedList<KKSysForms_CardModel.QACard> qaList;
-
-        private String sqlQuery;
-
-        private bool notFullyInDatabase;
-
-        private bool created;
-
-        public CardStack(String sqlQuere)
-        {
-            //Handle DB implementation requiered
-            try
+        public LinkedList<KKSysForms_CardModel.ContentCard> ContentList
+        { get
             {
-
-                this.sqlQuery = sqlQuere;
+                return ContentList;
             }
-            catch (Exception e)
+          set
             {
-                
+                if (ContentList == null)
+                {
+                    ContentList = value;
+                }
+                else
+                {
+                    foreach (KKSysForms_CardModel.ContentCard card in value)
+                    {
+                        ContentList.AddLast(card);
+                    }
+                }
             }
-            
         }
+
+        public LinkedList<KKSysForms_CardModel.QACard> QAList
+        {
+            get { return QAList; }
+            set
+            {
+                if (QAList == null)
+                {
+                    QAList = value;
+                }
+                else
+                {
+                    foreach (KKSysForms_CardModel.QACard card in value)
+                    {
+                        QAList.AddLast(card);
+                    }
+                }
+            }
+        }
+
+        
 
         public CardStack()
         {
-            this.created = true;
+           
         }
 
-        public void addCard(KKSysForms_CardModel.Card card)
+
+
+        public List<KKSysForms_CardModel.Card> GetCardPack()
         {
-            
-        }
-
-        public void removeCard(KKSysForms_CardModel.Card remove)
-        {
-
-        }
-
-        public void replaceCard(KKSysForms_CardModel.Card target, KKSysForms_CardModel.Card replacement)
-        {
-
-        }
-
-        //False meanns, the transfer failed
-        public bool TransferIntoDataBase()
-        {
-            foreach (KKSysForms_CardModel.ContentCard card in this.contentList)
+            List<KKSysForms_CardModel.Card> returnList = new List<KKSysForms_CardModel.Card>();
+            foreach (KKSysForms_CardModel.ContentCard card in this.ContentList)
             {
-
+                returnList.Add(card);
             }
-            foreach (KKSysForms_CardModel.QACard card in this.qaList)
+            foreach (KKSysForms_CardModel.QACard card in this.QAList)
             {
-
+                returnList.Add(card);
             }
-            return false;
+
+            return returnList;
+
         }
+        
 
         
     }

@@ -4,6 +4,8 @@ using System.Runtime.Serialization.Formatters.Binary;
 using System.Collections.Generic;
 using System.IO;
 using KKSysForms_Event;
+using KKSysForms_CardModel;
+using KKSysForms_Filter;
 //Webserver database (SQL Server 2000 +)
 //using System.Data.SqlClient;
 //Connection driver for legacy Databases (possible unused) 
@@ -12,6 +14,7 @@ using KKSysForms_Event;
 //using System.Data.OleDb;
 
 using System.Data.SQLite;
+using KKSysForms_SerializeBoundModul;
 
 //using Npgsql;
 
@@ -27,14 +30,11 @@ namespace KKSysDatabase
    //Anlegen der Datenbank
    //Auslesen der Datenbank (wiederholende nur
    //Fehlt: Onetime events
+   //Befuerchtung: Synchroner Aufruf wuerde kollidieren mit der GUI: Sprich keine Reaktion solange gewartet wird
+   //Sollte daher in einem Thread ablaufen
     class DatabaseConnector
     {
         public static List<KKSysForms_CardModel.Card> AddToDatabase = new List<KKSysForms_CardModel.Card>();
-
-        private static List<byte[]> readyToAdd;
-
-        private static List<List<byte[]>> history;
-
        
         //The one and only instance
         private static DatabaseConnector instance;
@@ -43,9 +43,7 @@ namespace KKSysDatabase
 
         private static SQLiteCommand command;
 
-        private static BinaryFormatter bf;
 
-        private static MemoryStream ms = null;
 
         private static SQLiteDataReader resultTable;
 
@@ -65,11 +63,27 @@ namespace KKSysDatabase
             return instance;
         }
 
+
+        public void InsertData(List<EventLabel> insert)
+        {
+            //TagList woher?
+            InsertReferences(insert, null);
+            foreach (EventLabel el in insert)
+            {
+                InsertEvents(el);
+                InsertCard(el, null);
+            }
+           
+            //Wie bekommen wir die Tags hierhin?
+            
+        }
         //TODO
         //This method should load all EventLabel from database and should load all weekly and incomming events
         //Was ist, wenn die Datenbank leer ist? vorher anfragen ob eine Tabelle mit Settings existiert! TODO
         //Weniger Variablen waeren schön
         //TODO: NonRepeat and Replace
+        //Change to private -> public List<KKSysForms_Event.EventLabel> InitialCallDatabase(){}
+        //TODO: Auskapseln des EventLabel insert update etc...
         public List<KKSysForms_Event.EventLabel> InitialCallEventLabel_Repeat()
         {
             //Befehl zuruecksetzen
@@ -79,23 +93,23 @@ namespace KKSysDatabase
             //Warteschlange fuer die einzelnen Labels - leer
             Queue<EventLabel> queue = new Queue<EventLabel>();
             //Liste mit den IDs -> sollte querey sein
-            Queue<Int64> idOfEventAtPlace = new Queue<Int64>();
-            command.CommandText = "SELECT * FROM EventLabel";
+            
+            command.CommandText = "SELECT * FROM EventLabel WHERE ID > 0";
 
             resultTable = command.ExecuteReader();
-            String read = "";
+           
             //Hier werden alle EventLabels ermittelt
             while (resultTable.Read())
             {
-                idOfEventAtPlace.Enqueue((Int64)(resultTable[0]));
+
+                
                 EventLabel eventLabel = new EventLabel(resultTable[1].ToString(), true);
+                eventLabel.IDatabaseID = resultTable.GetInt64(0);
                 queue.Enqueue(eventLabel);
             }
             //Ergebnistablle schlieszen
             resultTable.Close();
 
-            //Search by ID
-            Int64 searchId; 
             
             //Aktuell zu betrachtendes EventLabel
             EventLabel el;
@@ -106,36 +120,34 @@ namespace KKSysDatabase
             byte[] serialized;
             //Inaktive Events beachten! TODO
             //TODO: Maybe try to reduce this to one loop except for 3 Loops for all kinds of Events
-            while(idOfEventAtPlace.Count != 0)
+            while (queue.Count != 0)
             {
+                el = queue.Dequeue();
                 //This Command gets the serial of the label
-                searchId = idOfEventAtPlace.Dequeue();
                 //Waehle shit from Database
-                command.CommandText = "SELECT ID,serialized FROM RepeatEvents WHERE LabelID =" + searchId + ";";
+                command.CommandText = "SELECT ID,serialized FROM RepeatEvents WHERE LabelID =" + el.IDatabaseID + ";";
 
                 //Eventlabel wird herausgenommen
-                el = queue.Dequeue();
+                
                 //Die Ergebnis tabelle
                 resultTable = command.ExecuteReader();
-                
-                
-               
+
+
+
 
                 //Schleife, erste Zeile wurde bereitsgeladen
-                while(resultTable.Read())
+                while (resultTable.Read())
                 {
-                  
-                    //ID vom Event - 
-                    Int64 idOfEvent = (Int64)resultTable.GetInt64(0);
+
+                   
                     //Event Object 
                     serialized = (byte[])resultTable.GetValue(1);
-                    //Deserialisierung
-                    ms = new MemoryStream(serialized);
-                    RepeatEvent tempEvent = (RepeatEvent)bf.Deserialize(ms);
-                    ms.Close();
 
-                    //Setzen der serial fuer spaeter
-                    tempEvent.serialID = idOfEvent;
+                    RepeatEvent tempEvent = (RepeatEvent)Serialize.GetDeserializeObject(serialized);
+                  
+                    //Setting EventID
+                    tempEvent.IDatabaseID = resultTable.GetInt64(0);
+                  
                     //Haengen das Event an das Eventlaebel an
                     el.addEvent(tempEvent);
                     tempEvent = null;
@@ -143,20 +155,33 @@ namespace KKSysDatabase
 
 
 
-                } 
+                }
                 returnList.Add(el);
                 resultTable.Close();
 
-                
+
+             
                
 
             }
-            //Ressourcen freigeben
-            ms.Close();
-            ms.Dispose();
-           
-
+            
             return returnList;
+        }
+
+        //Threads....
+        public List<Tag> InitialAsyncCallTagList()
+        {
+
+            ResetCommand();
+            
+            return null;
+
+        }
+
+        //Threads.... oder synchron
+        public List<Theme> InitialAsyncCallThemeList()
+        {
+            return null;
         }
 
         //TODO
@@ -166,172 +191,243 @@ namespace KKSysDatabase
             return null;
         }
 
-        public void InsertEvents(List<EventLabel> labledEvents)
+        private void InsertReferences(List<EventLabel> labels, List<Tag> tagList)
+        {
+
+        }
+        //TODO: Change to private
+        //Auskapsel von EventLabel insert!
+        private void InsertEvents(EventLabel el)
         {
             ResetCommand();
             List<Event> eventList;
-            Int64 eventLabelId;
-            foreach (EventLabel el in labledEvents)
+          
+          
+            
+            eventList = el.getEventList();
+            if (el.ICreated)
             {
-                eventList = el.getEventList();
-                if (el.created)
-                {
-                    command.CommandText = "INSERT INTO EventLabel (nameOf) VALUES ('" + el.Name + "');";
-                    command.ExecuteNonQuery();
-                    
-                        
-                }
-                command.CommandText = "SELECT ID FROM EventLabel WHERE nameOf ='" + el.Name + "';";
+                command.CommandText = "INSERT INTO EventLabel (nameOf) VALUES ('" + el.Name + "');";
+                command.ExecuteNonQuery();
+                command.CommandText = "SELECT ID FROM EventLabel WHERE nameOf = '" + el.Name + "';";
                 resultTable = command.ExecuteReader();
                 resultTable.Read();
-                eventLabelId = Int64.Parse(resultTable[0].ToString());
+                el.IDatabaseID = resultTable.GetInt64(0);
                 resultTable.Close();
-                foreach (Event ev in eventList)
+                    
+                        
+            }
+               
+            foreach (Event ev in eventList)
+            {
+                if (ev is RepeatEvent)
                 {
-                    if (ev is RepeatEvent)
+                    RepeatEvent re = (RepeatEvent)ev;
+                    //Wenn es erstellt ist, wird es einfach eingefügt
+                    if (re.ICreated)
                     {
-                        RepeatEvent re = (RepeatEvent)ev;
-                        if (re.created)
-                        {
-                            String dayCode = generateDayCodeKurz(re.dayCode);
-                            command.CommandText = "INSERT INTO RepeatEvents (LabelId, NameOf, serialized,DayCode) VALUES (" + eventLabelId + ",'" + ev.Name + "',?,'" + dayCode + "');";
-                            ms = new MemoryStream();
-                            bf.Serialize(ms, re);
-                            byte[] data = ms.ToArray();
-                            ms.Close();
-                            ms.Dispose();
-                            SQLiteParameter param = new SQLiteParameter();
-                            command.CreateParameter();
-                            command.Parameters.Add(param);
-                            param.Value = data;
+                        String dayCode = generateDayCodeKurz(re.dayCode);
+                        command.CommandText = "INSERT INTO RepeatEvents (LabelId, NameOf, serialized,DayCode) VALUES (" + ev.IDatabaseID + ",'" + ev.Name + "',?,'" + dayCode + "');";
 
-                            command.ExecuteNonQuery();
-                        }
-                        else if (ev.modified)
-                        {
-                            bool updateDay = false;
-                            bool updateName = false;
-                            bool updateLabel = false;
+                        byte[] data = Serialize.GetSerializeByte(re);
+                        
 
-                            Int64 serial = re.serialID;
-                            command.CommandText = "SELECT LabelID,nameOf, DayCode FROM RepeatEvents WHERE ID =" + serial + ";";
+                        SQLiteParameter param = new SQLiteParameter();
+                        command.CreateParameter();
+                        command.Parameters.Add(param);
+                        param.Value = data;
 
-                            resultTable = command.ExecuteReader();
-                            resultTable.Read();
-                            Int64 databaseLabelID = (Int64)resultTable.GetInt64(0);
-                            List<DayOfWeek> databaseDays = this.parseDatabaseDayCodeToList(resultTable.GetString(2));
-                            String databaseName = resultTable.GetString(1);
-
-                            if (databaseDays.Count != re.dayCode.Count)
-                            {
-                                updateDay = true;
-                            }
-                            else
-                            {
-                                foreach (DayOfWeek d in databaseDays)
-                                {
-                                    if (!re.dayCode.Contains(d))
-                                    {
-                                        updateDay = true;
-                                    }
-                                }
-                            }
-
-                            //Checking Name Update
-                            if (!databaseName.Equals(re.Name))
-                            {
-                                updateName = true;
-                            }
-
-
-                            //Checking, Label has to be updated
-                            resultTable.Close();
-                            Int64 currentLabelID = 0;
-                            if (el.created)
-                            {
-                                updateLabel = true;
-                            }
-                            else
-                            {
-                                command.CommandText = "SELECT ID FROM EventLabel WHERE NameOf = '" + el.Name + "';";
-                                resultTable = command.ExecuteReader();
-                                resultTable.Read();
-                                currentLabelID = resultTable.GetInt64(0);
-                                resultTable.Close();
-                                if (currentLabelID != databaseLabelID)
-                                {
-                                    updateLabel = true;
-                                }
-                            }
-
-                            //Anfrage generieren
-                            String cmdGen = "UPDATE RepeatEvents SET ";
-                            if (updateLabel)
-                            {
-
-                                if (el.created)
-                                {
-                                    command.CommandText = "INSERT INTO EventLabel (nameOf) VALUES ('" + el.Name + "');";
-                                    command.ExecuteNonQuery();
-                                    command.CommandText = "SELECT ID FROM EventLabel WHERE nameOf = '" + el.Name + "';";
-                                    resultTable = command.ExecuteReader();
-                                    currentLabelID = resultTable.GetInt64(0);
-                                    resultTable.Close();
-                                    //Got The new Created ID
-
-                                }
-                                cmdGen = cmdGen + "LabelID = " + currentLabelID + ",";
-                            }
-
-                            if (updateName)
-                            {
-                                cmdGen = cmdGen + "nameOf = '" + ev.Name + "',";
-                            }
-                            if (updateDay)
-                            {
-                                cmdGen = cmdGen + " dayCode = '" + generateDayCodeKurz(re.dayCode) + "',";
-                            }
-                            //Ofc update serialized Object
-                            command.CreateParameter();
-                            ms = new MemoryStream();
-                            bf.Serialize(ms, re);
-                            byte[] data = ms.ToArray();
-                            ms.Close();
-                            cmdGen = cmdGen + "serialized = ? WHERE ID = " + ev.serialID+";";
-                            SQLiteParameter param = new SQLiteParameter();
-                            command.CommandText = cmdGen;
-                            command.Parameters.Add(param);
-                            param.Value = data;
-
-                            command.ExecuteNonQuery();
-
-                        }
-                        ResetCommand();
-
+                        command.ExecuteNonQuery();
                     }
-                    else if (ev is NonRepeatingEvents)
-                    {
-                        //Schwierig - was wenn ein gleicher Name existiert? Definitiv unique id rausladen
-                        if (ev is ReferencedOneTimeEvent)
-                        {
+                    //WEnn es modifiziert wurde, muss der alte Datenbank eintrag gelöscht werden bzw ersetzt werden
+                    //Hierfür ersetzen wir alles: Wenn sich das Label geändert hat, gehört es nicht mehr zu genau diesem Label
 
-                            throw new NotImplementedException("Not implementd");
-                        }
-                        else if (ev is NonReferencedOneTimeEvent)
+                    else if (re.IModified)
+                    {
+                        bool updateDay = false;
+                        bool updateName = false;
+                        bool updateLabel = false;
+
+                         
+                        command.CommandText = "SELECT LabelID,nameOf, DayCode FROM RepeatEvents WHERE ID =" + re.IDatabaseID + ";";
+
+                        resultTable = command.ExecuteReader();
+                        resultTable.Read();
+                        Int64 databaseLabelID = (Int64)resultTable.GetInt64(0);
+                        List<DayOfWeek> databaseDays = this.parseDatabaseDayCodeToList(resultTable.GetString(2));
+                        String databaseName = resultTable.GetString(1);
+                        resultTable.Close();
+                        if (databaseDays.Count != re.dayCode.Count)
                         {
-                            throw new NotImplementedException("Not implementd");
+                            updateDay = true;
                         }
                         else
                         {
-                            throw new Exception("Devs haben wieder scheise gebaut");
+                            foreach (DayOfWeek d in databaseDays)
+                            {
+                                if (!re.dayCode.Contains(d))
+                                {
+                                    updateDay = true;
+                                }
+                            }
+                        }
+
+                        //Checking Name Update
+                        if (!databaseName.Equals(re.Name))
+                        {
+                            updateName = true;
+                        }
+
+
+                        //Checkin Label
+                            
+                        if (el.ICreated)
+                        {
+                            updateLabel = true;
+                        }
+                        else
+                        {
+  
+                            if (el.IDatabaseID != databaseLabelID)
+                            {
+                                updateLabel = true;
+                            }
+                        }
+
+                        //Anfrage generieren
+                        String cmdGen = "UPDATE RepeatEvents SET ";
+                        if (updateLabel)
+                        {
+
+                            if (el.ICreated)
+                            {
+                                //Muss so sein, da EL noch keine ID hat
+                                command.CommandText = "INSERT INTO EventLabel (nameOf) VALUES ('" + el.Name + "');";
+                                command.ExecuteNonQuery();
+                                command.CommandText = "SELECT ID FROM EventLabel WHERE nameOf = '" + el.Name + "';";
+                                resultTable = command.ExecuteReader();
+                                el.IDatabaseID = resultTable.GetInt64(0);
+                                resultTable.Close();
+                                //Got The new Created ID
+
+                            }
+                            cmdGen = cmdGen + "LabelID = " + el.IDatabaseID + ",";
+                        }
+
+                        if (updateName)
+                        {
+                            cmdGen = cmdGen + "nameOf = '" + re.Name + "',";
+                        }
+                        if (updateDay)
+                        {
+                            cmdGen = cmdGen + " dayCode = '" + generateDayCodeKurz(re.dayCode) + "',";
+                        }
+                        //Ofc update serialized Object
+                        command.CreateParameter();
+                      
+                        byte[] data = Serialize.GetSerializeByte(re);
+                        
+                        cmdGen = cmdGen + "serialized = ? WHERE ID = " + re.IDatabaseID+";";
+                        SQLiteParameter param = new SQLiteParameter();
+                        command.CommandText = cmdGen;
+                        command.Parameters.Add(param);
+                        param.Value = data;
+
+                        command.ExecuteNonQuery();
+
+                    }
+                    ResetCommand();
+
+                }
+                else if (ev is NonRepeatingEvents)
+                {
+                    //Schwierig - was wenn ein gleicher Name existiert? Definitiv unique id rausladen
+                    if (ev is ReferencedOneTimeEvent)
+                    {
+
+                        throw new NotImplementedException("Not implementd");
+                    }
+                    else if (ev is NonReferencedOneTimeEvent)
+                    {
+                        throw new NotImplementedException("Not implementd");
+                    }
+                    else
+                    {
+                        throw new Exception("Devs haben wieder scheise gebaut");
+                    }
+
+                }
+                
+            }
+        }
+        //TODO: Change InsertEvents to private -> public void InsertData(List<EventLabel> ...){}
+        //Kapsel Eventlabel update/Insert aus aus beiden FUnktionen
+        private void InsertCard(EventLabel el, List<Tag> tagList)
+        {
+            ResetCommand();
+            //Ausgehend davon, das die Labels schon eingelagert worden sind und geupdatet
+            //Ebenfalls Themen
+            List<Theme> themeList = el.getThemeList();
+            List<Card> cardList = new List<Card>();
+            ContentCard cc;
+            QACard qa;
+            foreach (Theme th in themeList)
+            {
+                cardList.AddRange(th.GetContent());
+                cardList.AddRange(th.GetQA());
+                foreach (Card ca in cardList)
+                {
+                    if (ca.ICreated)
+                    {
+                        //Find right tabular
+                        if (ca is ContentCard)
+                        {
+                            cc = (ContentCard)ca;
+                            //Insert into contentCard
+                        }
+                        else if (ca is QACard)
+                        {
+                            qa = (QACard)ca;
+                        }
+                        else
+                        {
+
                         }
 
                     }
+                    else if (ca.IModified)
+                    {
+                        //Find right tabular and the entry
+                        //Just Update all
+                        if (ca is ContentCard)
+                        {
+                            cc = (ContentCard)ca;
+                            //Insert into contentCard
+                        }
+                        else if (ca is QACard)
+                        {
+                            qa = (QACard)ca;
+                            command.CommandText = "UPDATE QACard SET ThemeID = " + th.IDatabaseID + ", Tag = '"+qa.getTags().ToString()+"', serialized = ?";
+                            command.CreateParameter();
+                            SQLiteParameter param = new SQLiteParameter();
+
+                            command.Parameters.Add(param);
+                            param.Value = Serialize.GetSerializeByte(qa);
+                            command.ExecuteNonQuery();
+                        }
+
+                    }
+                    else
+                    {
+                        continue;
+                    }
                 }
-            }
+            }        
         }
 
-        
+        //Guess i wanna have not much serialize shit in the insert
+        //Class for it
+       
 
         private DatabaseConnector()
         {
@@ -343,10 +439,16 @@ namespace KKSysDatabase
 
             //Init Command
             command = new SQLiteCommand(connection);
-            initDatabase();
+            try
+            {
+                initDatabase();
+            }
+            catch (KKSysForms_Exceptions.SQL_DatabaseExistsException e)
+            {
+                
+            }
+           
 
-            //if no exception, initialize all objects;
-            bf = new BinaryFormatter();
 
 
 
@@ -476,7 +578,7 @@ namespace KKSysDatabase
             }
             catch (SQLiteException e)
             {
-                throw new Exception("Error in SQL-Code - Report Devs!" + e);
+                throw new KKSysForms_Exceptions.SQL_DatabaseExistsException();
             }
 
            

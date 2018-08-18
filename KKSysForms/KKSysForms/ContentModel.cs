@@ -4,155 +4,85 @@ using System.Text;
 //Using for Graphics
 using System.Drawing;
 using System.IO;
-
+using System.Collections.Generic;
 using System.Runtime.Serialization;
 
+//Rebuild this into Composite
+//TODO: Overloaed berechnung
+//Backpack
+//TODO: Geneuere Implementierung
 namespace KKSysForms_DataTypes
 {
-    
-    abstract class DataType
+
+    abstract class Datatype
     {
 
-        
-        //Std Const.
-        public DataType()
-        {
-
-        }
-        //General method declaration for String method
-        abstract public override String ToString() ;
-
-        
-        //Object to Byte for database
-        abstract public byte[] EncodeToByte();
-
-        abstract public void DecodeFromByte(byte[] data);
-        
-    }
-    [Serializable]
-    class Text : DataType
-    {
-        private String content;
-
-        public Text(String content)
-        {     
-            this.content = content;
-
-        }
-
-        public String GetContent()
-        {
-            return content;
-        }
-
-        public void SetContent(String set)
-        {
-            this.content = set;
-        }
-        public override String ToString()
-        {
-            return content;
-        }
-
-        public override byte[] EncodeToByte()
-        {
-            byte[] returnValue;
-           
-            UnicodeEncoding encoding = new UnicodeEncoding();
-            returnValue = encoding.GetBytes(this.content);
-
-            
-            
-            return returnValue;
-        }
-
-        public override void DecodeFromByte(byte[] data)
+        public Datatype()
         {
 
         }
 
-        
-    }
-    
-    class Graphic : DataType
-    {
-        
-        private Image content;
+        //What kind of operation they need?
+        public abstract void ToTex();
 
-       
-        private bool currentFromFileSystem;
 
-        public Graphic(String pathToGraphic)
-        {
-            try
-            {
-
-                this.content = Image.FromFile(pathToGraphic);
-                currentFromFileSystem = true;
-            }
-            catch (IOException e)  
-            {
-                content = null;
-                throw e;
-            }
-            
-       
-        }
-
-       
-
-        public override byte[] EncodeToByte()
-        {
-            byte[] returnVar;
-            MemoryStream stream = new MemoryStream();
-            try
-            {
-                this.content.Save(stream, System.Drawing.Imaging.ImageFormat.Jpeg);
-                returnVar = stream.ToArray();
-                stream.Dispose();
-
-            }
-            catch (Exception e)
-            {
-                
-                return null;
-
-            }
-   
-
-            return returnVar;
-        }
-
-        public override void DecodeFromByte(byte[] data)
-        {
-            
-             MemoryStream testBack = new MemoryStream(data);
-             this.content = Image.FromStream(testBack);
-        }
-        
-        public override String ToString()
-        {
-            return null;
-        }
     }
 
-    //How we gonna do that?(XML file maybe)?
-    
-    class Formula : DataType
+    class Text : Datatype
     {
-        public override String ToString()
-        {
-            return "";
-        }
-        //Not implemented
-        public override byte[] EncodeToByte()
+        public override void ToTex()
         {
             throw new NotImplementedException();
         }
-        public override void DecodeFromByte(byte[] data)
+    }
+
+    class Graphics : Datatype
+    {
+        public override void ToTex()
         {
             throw new NotImplementedException();
         }
+    }
+
+    class MathMode : Datatype
+    {
+        public override void ToTex()
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    class CompositeDatatype : Datatype
+    {
+        private List<Datatype> components;
+
+        public CompositeDatatype()
+        {
+
+        }
+
+        public void AddComponent(Datatype elem)
+        {
+            this.components.Add(elem);
+        }
+
+        public override void ToTex()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void RemoveComponent(Datatype elem)
+        {
+            this.components.Remove(elem);
+        }
+
+        public void SetComponents(List<Datatype> components)
+        {
+            this.components = components;
+        }
+
+
+
     }
 
     

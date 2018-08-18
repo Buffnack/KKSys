@@ -56,7 +56,7 @@ namespace KKSysForms
                         List<Event> tump = tust.getEventList();
                         foreach (Event testo in tump)
                         {
-                            tmp = tmp + testo.Name + " mit ID "+testo.serialID +"\n";
+                            tmp = tmp + testo.Name + " mit ID "+testo.IDatabaseID +"\n";
                         }
 
                     }
