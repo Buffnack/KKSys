@@ -6,20 +6,16 @@ using System.Threading.Tasks;
 
 namespace KKSysForms
 {
-    class Controller
+    //Temporary
+    static class Controller
     {
-        //Guess we need the view table
-        public Controller()
-        {
+        public static KKSys system;
 
+        public static void initSystem()
+        {
+            system = new KKSys();
 
         }
-
-
-        public void reactOnGUIControl(String cmd)
-        {
-           
-
-        }
+       
     }
 }

@@ -76,24 +76,27 @@ namespace KKSysForms_Event
 
 
     //Enthaelt Information ueber das Label mehrere Veranstaltungen
-    class EventLabel : KKSysForms_Interfaces.IKKSysDatabaseInterface
+    class EventLabel : KKSysForms_Interfaces.DatabaseMark
     {
+
+        private String _name;
+
         public String Name
         {
             get
             {
-                return Name;
+                return _name;
             }
             set
             {
                 if (ICreated)
                 {
-                    Name = value;
+                    _name = value;
                 }
                 else
                 {
                     IModified = true;
-                    Name = value;
+                    _name = value;
                 }
 
             }
@@ -102,30 +105,16 @@ namespace KKSysForms_Event
         private List<Event> eventsUnderLabel;
         private List<Theme> themeUnderLabel;
 
-        public long IDatabaseID
-        {
-            get => IDatabaseID;
-            set => IDatabaseID = value;
-        }
-
-        public bool ICreated
-        {
-            get => ICreated;
-            set => ICreated = true;
-        }
-        public bool IModified
-        {
-            get => IModified;
-            set => IModified = value;
-        }
+       
 
         public EventLabel(String label, bool fromDatabase)
         {
-            Name = label;
+            
             this.eventsUnderLabel = new List<Event>();
             this.themeUnderLabel = new List<Theme>();
             this.ICreated = !fromDatabase;
-            
+            Name = label;
+
         }
 
         public void addEvent(Event @event)
@@ -154,7 +143,7 @@ namespace KKSysForms_Event
     }
 
     [Serializable]
-    abstract class Event : ISerializable, KKSysForms_Interfaces.IKKSysDatabaseInterface
+    abstract class Event : KKSysForms_Interfaces.DatabaseMark, ISerializable
     {
         //Required to update specific Event if modfied is set
         
@@ -207,23 +196,6 @@ namespace KKSysForms_Event
 
         [NonSerialized]
         protected bool DeadLine;
-
-        public long IDatabaseID
-        {
-            get => IDatabaseID;
-            set => IDatabaseID = value;
-        }
-
-        public bool ICreated
-        {
-            get => ICreated;
-            set => ICreated = true;
-        }
-        public bool IModified
-        {
-            get => IModified;
-            set => IModified = value;
-        }
 
         //Constructor for Creation and Deserialisation
         public Event(String name, TimeStamp start, TimeStamp end)

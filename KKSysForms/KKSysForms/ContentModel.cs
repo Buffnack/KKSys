@@ -13,7 +13,7 @@ using System.Runtime.Serialization;
 //TODO: Geneuere Implementierung
 namespace KKSysForms_DataTypes
 {
-
+    //Abstract Class for the COmposite
     abstract class Datatype
     {
 
@@ -23,30 +23,47 @@ namespace KKSysForms_DataTypes
         }
 
         //What kind of operation they need?
-        public abstract void ToTex();
+        public abstract String ToTex();
 
 
     }
-
+    //Elemntary Text Datatype equals to String
     class Text : Datatype
     {
-        public override void ToTex()
+        private String content;
+
+        public Text(String content)
         {
-            throw new NotImplementedException();
+            this.content = content;
+        }
+        public override String ToTex()
+        {
+            return content;
         }
     }
 
+    //Not implemented
     class Graphics : Datatype
     {
-        public override void ToTex()
+        private Image content;
+
+        public Graphics(Image content)
+        {
+            this.content = content;
+
+        }
+
+        //This method should save the Image into a specific folder with the tex
+        public override String ToTex()
         {
             throw new NotImplementedException();
         }
     }
 
+    //Not implemented, because its not sure how we gonna store that
     class MathMode : Datatype
     {
-        public override void ToTex()
+        public override String ToTex()
         {
             throw new NotImplementedException();
         }
@@ -58,7 +75,7 @@ namespace KKSysForms_DataTypes
 
         public CompositeDatatype()
         {
-
+            components = new List<Datatype>();
         }
 
         public void AddComponent(Datatype elem)
@@ -66,9 +83,15 @@ namespace KKSysForms_DataTypes
             this.components.Add(elem);
         }
 
-        public override void ToTex()
+        public override String ToTex()
         {
-            throw new NotImplementedException();
+            String tmp = "";
+            foreach (Datatype data in components)
+            {
+                tmp = tmp +data.ToTex();
+            }
+
+            return tmp;
         }
 
         public void RemoveComponent(Datatype elem)

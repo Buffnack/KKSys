@@ -9,9 +9,13 @@ using KKSysForms_Filter;
 using KKSysForms_Event;
 using KKSysDatabase;
 using KKSysForms_DataTypes;
+using KKSysForms_PDFCreate;
 
 namespace KKSysForms
 {
+    //First Iteration: Implement Adding and Database insert for exceptions
+    //Second Iteration: Implement Remove and Modify for exceptions
+    //Third Iteration: Implement Filter
     class KKSys
     {
 
@@ -20,20 +24,24 @@ namespace KKSysForms
         private EventLabel currentTarget;
 
         //Need to be static
-        public static List<EventLabel> loadedLabel;
+        public List<EventLabel> loadedLabel;
+
+        public List<Theme> currentTargetThemes;
 
         public DateTime today;
 
         //Nicht brauchbar
         private Filter Eventfilter;
 
-        public static bool Stored
+        private bool datastored;
+
+        public bool Stored
         {
-            get { return Stored; }
+            get { return datastored; }
             set { if (value)
                 {
-                    DatabaseConnector.getInstance().InsertData(loadedLabel);
-                    Stored = value;
+                    DatabaseConnector.getInstance().InsertData(this.loadedLabel);
+                    datastored = value;
                 }
                 else
                 {
@@ -43,77 +51,65 @@ namespace KKSysForms
         }
         
 
-        public KKSys(Form1 test)
+        public KKSys()
         {
             database = DatabaseConnector.getInstance();
-            today = DateTime.Now;
             loadedLabel = database.InitialCallEventLabel_Repeat();
+            
+          
+        }
 
-
-            String tmp = "";
-            String whatIsIn = "";
-            foreach (EventLabel tust in loadedLabel)
-            {
-                
-                tmp = tmp + tust.Name+ " hat folgende Events:\n";
-                if (tust.getEventList() == null)
-                {
-                    tmp = tmp + " keine \n";
-                }
-                else
-                {
-                    if (tust.getEventList().Count == 0)
-                    {
-                        tmp = tmp + " keine \n";
-                    }
-                    else
-                    {
-                        List<Event> tump = tust.getEventList();
-                        foreach (Event testo in tump)
-                        {
-                            tmp = tmp + testo.Name + " mit ID "+testo.IDatabaseID +"\n";
-                        }
-
-                    }
-                }
-
-            }
-
-            test.setRt(tmp);
+        public void CreatePDF()
+        {
+            GeneratePDF.GeneratePDFFile(currentTarget.getThemeList().First().GetQA(), "TestTex");
         }
 
         public void CreateEventLabel(String name)
         {
-            if (currentTarget != null)
+            EventLabel tmp = new EventLabel(name, false);
+            loadedLabel.Add(tmp);
+        }
+
+        public void SetCurrentEventLabelTarget(String name)
+        {
+            foreach (EventLabel label in loadedLabel)
             {
-                EventLabel tmpLabel = new EventLabel(name, false);
-                if (loadedLabel.Contains(tmpLabel))
+                if (label.Name == name)
                 {
-                    throw new Exception("Dieses Label existiert schon");
+                    currentTarget = label;
+                    break;
                 }
-                else
-                {
-                    currentTarget = tmpLabel;
-                }
-            }
-            else
-            {
-                currentTarget = new EventLabel(name,false);
             }
         }
 
-        public void ModifyLabelToEvent(EventLabel label, Event @event, bool remove)
+        public void CreateTheme(String name)
         {
-            if (remove)
-            {
-                label.removeEvent(@event);
-            }
-            else
-            {
-                label.addEvent(@event);
-            }
-           
+            Theme them = new Theme(name);
+            currentTarget.getThemeList().Add(them);
+
         }
+
+        //TODO: Rework that shit
+        public void CreateCards(String theme,String qhead, String ahead, String qcontent, String acontent)
+        {
+            Theme tmp = new Theme("None");
+            tmp.IDatabaseID = 0;
+            CompositeDatatype test, tmpo;
+            test = new CompositeDatatype();
+            test.AddComponent(new Text(qcontent));
+            tmpo = new CompositeDatatype();
+            tmpo.AddComponent(new Text(acontent));
+            tmp.AddCard(new QACard(qhead, ahead, test, tmpo));
+
+        }
+
+        //Parameter List
+        public void CreateEvent()
+        {
+
+        }
+
+      
 
         //This Method needs a high lvl parser in GUI
         public List<Event> showEvents(bool fromTarget)
@@ -137,17 +133,6 @@ namespace KKSysForms
                 return unsortedList;
 
             }
-        }
-
-        public void SetFilter(Filter filter)
-        {
-            this.Eventfilter = filter;
-        }
-
-        //TODO
-        private void GenerateDaysLeftForOneTime()
-        {
-
         }
 
         private void getCardsFromDatabase()

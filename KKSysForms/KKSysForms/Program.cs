@@ -7,7 +7,7 @@ namespace KKSysForms
     static class Program
     {
         
-        static Controller executeManager;
+        
         
         /// <summary>
         /// Der Haupteinstiegspunkt für die Anwendung.
@@ -24,10 +24,6 @@ namespace KKSysForms
             //kollidieren - oder geht das auch so? Mal sehen
             //TODO: Was ist das mit dem STATThread
             Form1 tmp = new Form1();
-            
-            
-            KKSys run = new KKSys(tmp);
-            
             Application.Run(tmp);
             
 

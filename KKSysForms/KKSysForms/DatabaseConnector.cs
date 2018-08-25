@@ -77,7 +77,7 @@ namespace KKSysDatabase
             //Wie bekommen wir die Tags hierhin?
             
         }
-        //TODO
+        //TODO Highly change this method
         //This method should load all EventLabel from database and should load all weekly and incomming events
         //Was ist, wenn die Datenbank leer ist? vorher anfragen ob eine Tabelle mit Settings existiert! TODO
         //Weniger Variablen waeren schön
@@ -113,9 +113,6 @@ namespace KKSysDatabase
             
             //Aktuell zu betrachtendes EventLabel
             EventLabel el;
-            
-          
-
             //Speicher fuer das Blob object
             byte[] serialized;
             //Inaktive Events beachten! TODO

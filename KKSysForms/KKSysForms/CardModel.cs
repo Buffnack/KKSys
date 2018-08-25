@@ -10,24 +10,9 @@ using KKSysForms_Filter;
 namespace KKSysForms_CardModel
 {
 
-    class Tag : KKSysForms_Interfaces.IKKSysDatabaseInterface
+    class Tag : KKSysForms_Interfaces.DatabaseMark
     {
-        public long IDatabaseID
-        {
-            get => IDatabaseID;
-            set => IDatabaseID = value;
-        }
-
-        public bool ICreated
-        {
-            get => ICreated;
-            set => ICreated = true;
-        }
-        public bool IModified
-        {
-            get => IModified;
-            set => IModified = value;
-        }
+       
 
 
 
@@ -59,36 +44,21 @@ namespace KKSysForms_CardModel
     }
 
 
-    class Theme : KKSysForms_Interfaces.IKKSysDatabaseInterface
+    class Theme : KKSysForms_Interfaces.DatabaseMark
     {
 
-
-        public long IDatabaseID
-        {
-            get => IDatabaseID;
-            set => IDatabaseID = value;
-        }
-
-        public bool ICreated
-        {
-            get => ICreated;
-            set => ICreated = true;
-        }
-        public bool IModified
-        {
-            get => IModified;
-            set => IModified = value;
-        }
+        private String name;
+      
 
         public String ThemeName
         {
             get
             {
-                return ThemeName;
+                return name;
             }
             set
             {
-                ThemeName = value;
+                name = value;
                 if (!ICreated && IDatabaseID != 0)
                 {
                     this.IModified = true;
@@ -136,24 +106,9 @@ namespace KKSysForms_CardModel
 
     //Serialisierung der anderen Objekte als Byte[] objekt - sprich erst umwandlung in byte, dann
     //Speicherung in SerializazionInfo
-    abstract class Card : KKSysForms_Interfaces.IKKSysDatabaseInterface, ISerializable
+    abstract class Card : KKSysForms_Interfaces.DatabaseMark, ISerializable
     {
-        public long IDatabaseID
-        {
-            get => IDatabaseID;
-            set => IDatabaseID = value;
-        }
-
-        public bool ICreated
-        {
-            get => ICreated;
-            set => ICreated = true;
-        }
-        public bool IModified
-        {
-            get => IModified;
-            set => IModified = value;
-        }
+       
 
         public abstract void GetObjectData(SerializationInfo info, StreamingContext context);
     }
@@ -202,13 +157,13 @@ namespace KKSysForms_CardModel
     class QACard : Card
     {
 
-        public String questionHeader;
+        public String questionHeader { get; set; }
 
-        public String answerHeader;
+        public String answerHeader { get; set; }
 
-        public CompositeDatatype questionContent;
+        public CompositeDatatype questionContent { get; set; }
 
-        public CompositeDatatype answerContent;
+        public CompositeDatatype answerContent { get; set; }
 
         private List<Tag> tags { get; }
 

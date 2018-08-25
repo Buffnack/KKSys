@@ -8,11 +8,35 @@ using System.Threading.Tasks;
 //Besitzen sollte, siehe Events, Cards fuer die Datenbank
 namespace KKSysForms_Interfaces
 {
-    //Sollten wir implementieren, das alles in der Datanbank unique sein sollte
-    interface IKKSysDatabaseInterface
+
+    abstract class DatabaseMark
     {
-        Int64 IDatabaseID { get; set; }
-        bool ICreated { get; set; }
-        bool IModified { get; set; }
+
+        protected Int64 databaseID;
+
+        protected bool created;
+
+        protected bool modified;
+
+        public long IDatabaseID
+        {
+            get => this.databaseID;
+            set => this.databaseID = value;
+        }
+
+        public bool ICreated
+        {
+            get
+            {
+                return this.created;
+            }
+            set { this.created = value; }
+        }
+        public bool IModified
+        {
+            get => modified;
+            set => modified = value;
+        }
+
     }
 }
