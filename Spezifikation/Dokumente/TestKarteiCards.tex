@@ -1,0 +1,48 @@
+\documentclass[
+a4paper,
+twoside,
+DIV=60,
+%BCOR=0mm,
+headlineinclude=false,
+footinclude=false,
+numbers=noenddot,
+%headheight=40pt,
+landscape, 11pt]{scrartcl}
+\usepackage{tabularx}
+\usepackage[left=-1cm,right=-1cm,top=0cm,bottom=0cm]{geometry}
+\begin{document}
+	
+	%temporaer
+	\newcolumntype{C}[1]{>{\centering\arraybackslash}p{#1}}
+	
+	\begin{tabular}{C{7.4cm}| C{7.4cm}| C{7.4cm} | C{7.4cm}}
+	\parbox[c][5.2cm][c]{7.4cm}
+	{
+		 \centerline
+		 {
+		 	Card one ?
+	 	}	
+ 	}& 	\parbox[c][5.2cm][c]{7.4cm}{ \centerline{Card two ?}	} 	&\parbox[c][5.2cm][c]{7.4cm}{ \centerline{Card three ?}	} & 	\parbox[c][5.2cm][c]{7.4cm}{ \centerline{Card four ?}	} \\
+	\hline	\parbox[c][5.2cm][c]{7.4cm}{ \centerline{Card 2.one ?}	}& 	\parbox[c][5.2cm][c]{7.4cm}{ \centerline{Card 2.two ?}	} 	&\parbox[c][5.2cm][c]{7.4cm}{ \centerline{Card 2.three ?}	} & 	\parbox[c][5.2cm][c]{7.4cm}{ \centerline{Card 2.four ?}	} \\
+	\hline 	\parbox[c][5.2cm][c]{7.4cm}{ \centerline{Card 3.one ?}	}& 	\parbox[c][5.2cm][c]{7.4cm}{ \centerline{Card 3.two ?}	} 	&\parbox[c][5.2cm][c]{7.4cm}{ \centerline{Card 3.three ?}	} & 	\parbox[c][5.2cm][c]{7.4cm}{ \centerline{Card 3.four ?}	} \\
+	\hline
+		\parbox[c][5.2cm][c]{7.4cm}{ \centerline{Card 4.one ?}	}& 	\parbox[c][5.2cm][c]{7.4cm}{ \centerline{Card 4.two ?}	} 
+			&\parbox[c][5.2cm][c]{7.4cm}{ \centerline{Card 4.three ?}	} & 	\parbox[c][5.2cm][c]{7.4cm}{ \centerline{Card 4.four ?}	} \\
+	\end{tabular}
+\newpage
+
+	\begin{tabular}{C{7.4cm}| C{7.4cm}| C{7.4cm} | C{7.4cm}}
+	\parbox[c][5.2cm][c]{7.4cm}{ \centerline{Card four !}	}
+	&
+	\parbox[c][5.2cm][c]{7.4cm}{ \centerline{Card thre !}	} 
+	&
+	\parbox[c][5.2cm][c]{7.4cm}{ \centerline{Card two !}} 
+	& 	
+	\parbox[c][5.2cm][c]{7.4cm}{ \centerline{Card one !}	} \\
+	\hline	\parbox[c][5.2cm][c]{7.4cm}{ \centerline{Card 2.four !}	}& 	\parbox[c][5.2cm][c]{7.4cm}{ \centerline{Card 2.three !}	} 	&\parbox[c][5.2cm][c]{7.4cm}{ \centerline{Card 2.two !}	} & 	\parbox[c][5.2cm][c]{7.4cm}{ \centerline{Card 2.one !}	} \\
+	\hline 	\parbox[c][5.2cm][c]{7.4cm}{ \centerline{Card 3.four !}	}& 	\parbox[c][5.2cm][c]{7.4cm}{ \centerline{Card 3.three !}	} 	&\parbox[c][5.2cm][c]{7.4cm}{ \centerline{Card 3.two !}	} & 	\parbox[c][5.2cm][c]{7.4cm}{ \centerline{Card 3.one !}	} \\
+	\hline
+	\parbox[c][5.2cm][c]{7.4cm}{ \centerline{Card 4.four !}	}& 	\parbox[c][5.2cm][c]{7.4cm}{ \centerline{Card 4.three!}	} 
+	&\parbox[c][5.2cm][c]{7.4cm}{ \centerline{Card 4.two !}	} & 	\parbox[c][5.2cm][c]{7.4cm}{ \centerline{Card 4.one !}	} \\
+\end{tabular}
+\end{document}

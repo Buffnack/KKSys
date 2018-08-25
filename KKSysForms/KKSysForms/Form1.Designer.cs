@@ -33,63 +33,26 @@ namespace KKSysForms
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            this.textBox1 = new System.Windows.Forms.TextBox();
-            this.richTextBox1 = new System.Windows.Forms.RichTextBox();
-            this.listBox1 = new System.Windows.Forms.ListBox();
-            this.button1 = new System.Windows.Forms.Button();
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem4 = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenuStrip2 = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.button2 = new System.Windows.Forms.Button();
-            this.button3 = new System.Windows.Forms.Button();
-            this.textBox2 = new System.Windows.Forms.TextBox();
-            this.textBox4 = new System.Windows.Forms.TextBox();
-            this.textBox5 = new System.Windows.Forms.TextBox();
-            this.textBox3 = new System.Windows.Forms.TextBox();
-            this.textBox6 = new System.Windows.Forms.TextBox();
+            this.eventLabelCB = new System.Windows.Forms.ComboBox();
+            this.ThemeCB = new System.Windows.Forms.ComboBox();
+            this.EventListBox = new System.Windows.Forms.ListBox();
+            this.AddCardBut = new System.Windows.Forms.Button();
+            this.RemCardBut = new System.Windows.Forms.Button();
+            this.EditCardBut = new System.Windows.Forms.Button();
+            this.EditEventBut = new System.Windows.Forms.Button();
+            this.RemEventBut = new System.Windows.Forms.Button();
+            this.AddEventBut = new System.Windows.Forms.Button();
+            this.ShowAllCardsBut = new System.Windows.Forms.Button();
+            this.showAll_EventBut = new System.Windows.Forms.Button();
+            this.CardListBox = new System.Windows.Forms.ListBox();
             this.contextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // textBox1
-            // 
-            this.textBox1.Location = new System.Drawing.Point(12, 728);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(1191, 31);
-            this.textBox1.TabIndex = 0;
-            this.textBox1.TextChanged += new System.EventHandler(this.TextBox1_TextChanged);
-            // 
-            // richTextBox1
-            // 
-            this.richTextBox1.Location = new System.Drawing.Point(5, 23);
-            this.richTextBox1.Name = "richTextBox1";
-            this.richTextBox1.ReadOnly = true;
-            this.richTextBox1.Size = new System.Drawing.Size(777, 176);
-            this.richTextBox1.TabIndex = 1;
-            this.richTextBox1.Text = "";
-            this.richTextBox1.TextChanged += new System.EventHandler(this.RichTextBox1_TextChanged);
-            // 
-            // listBox1
-            // 
-            this.listBox1.FormattingEnabled = true;
-            this.listBox1.ItemHeight = 25;
-            this.listBox1.Location = new System.Drawing.Point(802, 33);
-            this.listBox1.Name = "listBox1";
-            this.listBox1.Size = new System.Drawing.Size(401, 654);
-            this.listBox1.TabIndex = 2;
-            this.listBox1.SelectedIndexChanged += new System.EventHandler(this.ListBox1_SelectedIndexChanged);
-            // 
-            // button1
-            // 
-            this.button1.Location = new System.Drawing.Point(12, 662);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(125, 42);
-            this.button1.TabIndex = 3;
-            this.button1.Text = "button1";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // contextMenuStrip1
             // 
@@ -132,106 +95,159 @@ namespace KKSysForms
             this.contextMenuStrip2.Name = "contextMenuStrip2";
             this.contextMenuStrip2.Size = new System.Drawing.Size(61, 4);
             // 
-            // button2
+            // eventLabelCB
             // 
-            this.button2.Location = new System.Drawing.Point(169, 662);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(75, 42);
-            this.button2.TabIndex = 4;
-            this.button2.Text = "button2";
-            this.button2.UseVisualStyleBackColor = true;
+            this.eventLabelCB.FormattingEnabled = true;
+            this.eventLabelCB.Location = new System.Drawing.Point(320, 35);
+            this.eventLabelCB.Name = "eventLabelCB";
+            this.eventLabelCB.Size = new System.Drawing.Size(171, 33);
+            this.eventLabelCB.TabIndex = 3;
             // 
-            // button3
+            // ThemeCB
             // 
-            this.button3.Location = new System.Drawing.Point(270, 662);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(75, 42);
-            this.button3.TabIndex = 5;
-            this.button3.Text = "button3";
-            this.button3.UseVisualStyleBackColor = true;
+            this.ThemeCB.FormattingEnabled = true;
+            this.ThemeCB.Location = new System.Drawing.Point(978, 34);
+            this.ThemeCB.Name = "ThemeCB";
+            this.ThemeCB.Size = new System.Drawing.Size(170, 33);
+            this.ThemeCB.TabIndex = 4;
             // 
-            // textBox2
+            // EventListBox
             // 
-            this.textBox2.Location = new System.Drawing.Point(12, 395);
-            this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(100, 31);
-            this.textBox2.TabIndex = 6;
+            this.EventListBox.FormattingEnabled = true;
+            this.EventListBox.ItemHeight = 25;
+            this.EventListBox.Location = new System.Drawing.Point(20, 101);
+            this.EventListBox.Name = "EventListBox";
+            this.EventListBox.Size = new System.Drawing.Size(473, 604);
+            this.EventListBox.TabIndex = 6;
             // 
-            // textBox4
+            // AddCardBut
             // 
-            this.textBox4.Location = new System.Drawing.Point(12, 443);
-            this.textBox4.Name = "textBox4";
-            this.textBox4.Size = new System.Drawing.Size(117, 31);
-            this.textBox4.TabIndex = 8;
+            this.AddCardBut.Location = new System.Drawing.Point(683, 720);
+            this.AddCardBut.Name = "AddCardBut";
+            this.AddCardBut.Size = new System.Drawing.Size(131, 51);
+            this.AddCardBut.TabIndex = 7;
+            this.AddCardBut.Text = "Add Card";
+            this.AddCardBut.UseVisualStyleBackColor = true;
             // 
-            // textBox5
+            // RemCardBut
             // 
-            this.textBox5.Location = new System.Drawing.Point(144, 443);
-            this.textBox5.Name = "textBox5";
-            this.textBox5.Size = new System.Drawing.Size(100, 31);
-            this.textBox5.TabIndex = 9;
+            this.RemCardBut.Location = new System.Drawing.Point(836, 720);
+            this.RemCardBut.Name = "RemCardBut";
+            this.RemCardBut.Size = new System.Drawing.Size(103, 51);
+            this.RemCardBut.TabIndex = 8;
+            this.RemCardBut.Text = "Remove Card";
+            this.RemCardBut.UseVisualStyleBackColor = true;
             // 
-            // textBox3
+            // EditCardBut
             // 
-            this.textBox3.Location = new System.Drawing.Point(337, 443);
-            this.textBox3.Name = "textBox3";
-            this.textBox3.Size = new System.Drawing.Size(68, 31);
-            this.textBox3.TabIndex = 10;
+            this.EditCardBut.Location = new System.Drawing.Point(978, 720);
+            this.EditCardBut.Name = "EditCardBut";
+            this.EditCardBut.Size = new System.Drawing.Size(168, 51);
+            this.EditCardBut.TabIndex = 9;
+            this.EditCardBut.Text = "Edit Card";
+            this.EditCardBut.UseVisualStyleBackColor = true;
             // 
-            // textBox6
+            // EditEventBut
             // 
-            this.textBox6.Location = new System.Drawing.Point(430, 443);
-            this.textBox6.Name = "textBox6";
-            this.textBox6.Size = new System.Drawing.Size(100, 31);
-            this.textBox6.TabIndex = 11;
+            this.EditEventBut.Location = new System.Drawing.Point(323, 720);
+            this.EditEventBut.Name = "EditEventBut";
+            this.EditEventBut.Size = new System.Drawing.Size(168, 51);
+            this.EditEventBut.TabIndex = 12;
+            this.EditEventBut.Text = "Edit Event";
+            this.EditEventBut.UseVisualStyleBackColor = true;
+            // 
+            // RemEventBut
+            // 
+            this.RemEventBut.Location = new System.Drawing.Point(181, 720);
+            this.RemEventBut.Name = "RemEventBut";
+            this.RemEventBut.Size = new System.Drawing.Size(103, 51);
+            this.RemEventBut.TabIndex = 11;
+            this.RemEventBut.Text = "Remove Event";
+            this.RemEventBut.UseVisualStyleBackColor = true;
+            // 
+            // AddEventBut
+            // 
+            this.AddEventBut.Location = new System.Drawing.Point(28, 720);
+            this.AddEventBut.Name = "AddEventBut";
+            this.AddEventBut.Size = new System.Drawing.Size(131, 51);
+            this.AddEventBut.TabIndex = 10;
+            this.AddEventBut.Text = "Add Event";
+            this.AddEventBut.UseVisualStyleBackColor = true;
+            // 
+            // ShowAllCardsBut
+            // 
+            this.ShowAllCardsBut.Location = new System.Drawing.Point(683, 34);
+            this.ShowAllCardsBut.Name = "ShowAllCardsBut";
+            this.ShowAllCardsBut.Size = new System.Drawing.Size(146, 33);
+            this.ShowAllCardsBut.TabIndex = 13;
+            this.ShowAllCardsBut.Text = "Show All";
+            this.ShowAllCardsBut.UseVisualStyleBackColor = true;
+            // 
+            // showAll_EventBut
+            // 
+            this.showAll_EventBut.Location = new System.Drawing.Point(20, 39);
+            this.showAll_EventBut.Name = "showAll_EventBut";
+            this.showAll_EventBut.Size = new System.Drawing.Size(139, 29);
+            this.showAll_EventBut.TabIndex = 14;
+            this.showAll_EventBut.Text = "Show All Events";
+            this.showAll_EventBut.UseVisualStyleBackColor = true;
+            // 
+            // CardListBox
+            // 
+            this.CardListBox.FormattingEnabled = true;
+            this.CardListBox.ItemHeight = 25;
+            this.CardListBox.Location = new System.Drawing.Point(683, 101);
+            this.CardListBox.Name = "CardListBox";
+            this.CardListBox.Size = new System.Drawing.Size(485, 604);
+            this.CardListBox.TabIndex = 15;
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1215, 793);
-            this.Controls.Add(this.textBox6);
-            this.Controls.Add(this.textBox3);
-            this.Controls.Add(this.textBox5);
-            this.Controls.Add(this.textBox4);
-            this.Controls.Add(this.textBox2);
-            this.Controls.Add(this.button3);
-            this.Controls.Add(this.button2);
-            this.Controls.Add(this.button1);
-            this.Controls.Add(this.listBox1);
-            this.Controls.Add(this.richTextBox1);
-            this.Controls.Add(this.textBox1);
+            this.Controls.Add(this.CardListBox);
+            this.Controls.Add(this.showAll_EventBut);
+            this.Controls.Add(this.ShowAllCardsBut);
+            this.Controls.Add(this.EditEventBut);
+            this.Controls.Add(this.RemEventBut);
+            this.Controls.Add(this.AddEventBut);
+            this.Controls.Add(this.EditCardBut);
+            this.Controls.Add(this.RemCardBut);
+            this.Controls.Add(this.AddCardBut);
+            this.Controls.Add(this.EventListBox);
+            this.Controls.Add(this.ThemeCB);
+            this.Controls.Add(this.eventLabelCB);
             this.Name = "Form1";
             this.Text = "Form1";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.Form1_FormClosed);
             this.Load += new System.EventHandler(this.Form1_Load);
             this.contextMenuStrip1.ResumeLayout(false);
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
        
 
         #endregion
-
-        private System.Windows.Forms.TextBox textBox1;
-        private System.Windows.Forms.RichTextBox richTextBox1;
-        private System.Windows.Forms.ListBox listBox1;
-        private System.Windows.Forms.Button button1;
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem2;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem3;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem4;
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip2;
-        private System.Windows.Forms.Button button2;
-        private System.Windows.Forms.Button button3;
-        private System.Windows.Forms.TextBox textBox2;
-        private System.Windows.Forms.TextBox textBox4;
-        private System.Windows.Forms.TextBox textBox5;
-        private System.Windows.Forms.TextBox textBox3;
-        private System.Windows.Forms.TextBox textBox6;
+        private System.Windows.Forms.ComboBox eventLabelCB;
+        private System.Windows.Forms.ComboBox ThemeCB;
+        private System.Windows.Forms.ListBox EventListBox;
+        private System.Windows.Forms.Button AddCardBut;
+        private System.Windows.Forms.Button RemCardBut;
+        private System.Windows.Forms.Button EditCardBut;
+        private System.Windows.Forms.Button EditEventBut;
+        private System.Windows.Forms.Button RemEventBut;
+        private System.Windows.Forms.Button AddEventBut;
+        private System.Windows.Forms.Button ShowAllCardsBut;
+        private System.Windows.Forms.Button showAll_EventBut;
+        private System.Windows.Forms.ListBox CardListBox;
     }
 }
 
