@@ -67,6 +67,7 @@ namespace KKSysForms
             this.QContentTB = new System.Windows.Forms.TextBox();
             this.AHeadTB = new System.Windows.Forms.TextBox();
             this.QHeadTB = new System.Windows.Forms.TextBox();
+            this.CreatePDFBt = new System.Windows.Forms.Button();
             this.contextMenuStrip1.SuspendLayout();
             this.panel1.SuspendLayout();
             this.MainTabControl.SuspendLayout();
@@ -291,6 +292,7 @@ namespace KKSysForms
             // 
             // tabPage2
             // 
+            this.tabPage2.Controls.Add(this.CreatePDFBt);
             this.tabPage2.Controls.Add(this.ELAndTheCreatorBt);
             this.tabPage2.Controls.Add(this.AddCardCreatorBt);
             this.tabPage2.Controls.Add(this.ThemeBoxCreatorCB);
@@ -313,21 +315,21 @@ namespace KKSysForms
             // 
             // ELAndTheCreatorBt
             // 
-            this.ELAndTheCreatorBt.Location = new System.Drawing.Point(256, 217);
+            this.ELAndTheCreatorBt.Location = new System.Drawing.Point(89, 311);
             this.ELAndTheCreatorBt.Name = "ELAndTheCreatorBt";
-            this.ELAndTheCreatorBt.Size = new System.Drawing.Size(75, 23);
+            this.ELAndTheCreatorBt.Size = new System.Drawing.Size(148, 51);
             this.ELAndTheCreatorBt.TabIndex = 10;
-            this.ELAndTheCreatorBt.Text = "button2";
+            this.ELAndTheCreatorBt.Text = "Erstellen";
             this.ELAndTheCreatorBt.UseVisualStyleBackColor = true;
             this.ELAndTheCreatorBt.Click += new System.EventHandler(this.ELAndTheCreatorBt_Click);
             // 
             // AddCardCreatorBt
             // 
-            this.AddCardCreatorBt.Location = new System.Drawing.Point(975, 352);
+            this.AddCardCreatorBt.Location = new System.Drawing.Point(856, 268);
             this.AddCardCreatorBt.Name = "AddCardCreatorBt";
-            this.AddCardCreatorBt.Size = new System.Drawing.Size(75, 23);
+            this.AddCardCreatorBt.Size = new System.Drawing.Size(280, 52);
             this.AddCardCreatorBt.TabIndex = 9;
-            this.AddCardCreatorBt.Text = "button1";
+            this.AddCardCreatorBt.Text = "Karte Erstellen";
             this.AddCardCreatorBt.UseVisualStyleBackColor = true;
             this.AddCardCreatorBt.Click += new System.EventHandler(this.AddCardCreatorBt_Click);
             // 
@@ -338,6 +340,7 @@ namespace KKSysForms
             this.ThemeBoxCreatorCB.Name = "ThemeBoxCreatorCB";
             this.ThemeBoxCreatorCB.Size = new System.Drawing.Size(121, 33);
             this.ThemeBoxCreatorCB.TabIndex = 8;
+            this.ThemeBoxCreatorCB.SelectedIndexChanged += new System.EventHandler(this.ThemeBoxCreatorCB_SelectedIndexChanged);
             // 
             // EvBoxCreatorCb
             // 
@@ -350,16 +353,16 @@ namespace KKSysForms
             // 
             // ThemeCreatorTB
             // 
-            this.ThemeCreatorTB.Location = new System.Drawing.Point(114, 260);
+            this.ThemeCreatorTB.Location = new System.Drawing.Point(89, 260);
             this.ThemeCreatorTB.Name = "ThemeCreatorTB";
-            this.ThemeCreatorTB.Size = new System.Drawing.Size(100, 31);
+            this.ThemeCreatorTB.Size = new System.Drawing.Size(148, 31);
             this.ThemeCreatorTB.TabIndex = 6;
             // 
             // EventLabelCreatorTB
             // 
-            this.EventLabelCreatorTB.Location = new System.Drawing.Point(114, 150);
+            this.EventLabelCreatorTB.Location = new System.Drawing.Point(89, 207);
             this.EventLabelCreatorTB.Name = "EventLabelCreatorTB";
-            this.EventLabelCreatorTB.Size = new System.Drawing.Size(100, 31);
+            this.EventLabelCreatorTB.Size = new System.Drawing.Size(148, 31);
             this.EventLabelCreatorTB.TabIndex = 5;
             // 
             // InsertLabel
@@ -373,31 +376,41 @@ namespace KKSysForms
             // 
             // AContentTB
             // 
-            this.AContentTB.Location = new System.Drawing.Point(1036, 217);
+            this.AContentTB.Location = new System.Drawing.Point(1015, 217);
             this.AContentTB.Name = "AContentTB";
-            this.AContentTB.Size = new System.Drawing.Size(100, 31);
+            this.AContentTB.Size = new System.Drawing.Size(121, 31);
             this.AContentTB.TabIndex = 3;
             // 
             // QContentTB
             // 
             this.QContentTB.Location = new System.Drawing.Point(856, 217);
             this.QContentTB.Name = "QContentTB";
-            this.QContentTB.Size = new System.Drawing.Size(100, 31);
+            this.QContentTB.Size = new System.Drawing.Size(121, 31);
             this.QContentTB.TabIndex = 2;
             // 
             // AHeadTB
             // 
-            this.AHeadTB.Location = new System.Drawing.Point(1036, 158);
+            this.AHeadTB.Location = new System.Drawing.Point(1015, 158);
             this.AHeadTB.Name = "AHeadTB";
-            this.AHeadTB.Size = new System.Drawing.Size(100, 31);
+            this.AHeadTB.Size = new System.Drawing.Size(121, 31);
             this.AHeadTB.TabIndex = 1;
             // 
             // QHeadTB
             // 
             this.QHeadTB.Location = new System.Drawing.Point(856, 158);
             this.QHeadTB.Name = "QHeadTB";
-            this.QHeadTB.Size = new System.Drawing.Size(100, 31);
+            this.QHeadTB.Size = new System.Drawing.Size(121, 31);
             this.QHeadTB.TabIndex = 0;
+            // 
+            // CreatePDFBt
+            // 
+            this.CreatePDFBt.Location = new System.Drawing.Point(856, 439);
+            this.CreatePDFBt.Name = "CreatePDFBt";
+            this.CreatePDFBt.Size = new System.Drawing.Size(280, 63);
+            this.CreatePDFBt.TabIndex = 12;
+            this.CreatePDFBt.Text = "Erstelle PDF";
+            this.CreatePDFBt.UseVisualStyleBackColor = true;
+            this.CreatePDFBt.Click += new System.EventHandler(this.CreatePDFBt_Click);
             // 
             // Form1
             // 
@@ -455,6 +468,7 @@ namespace KKSysForms
         private System.Windows.Forms.TextBox QHeadTB;
         private System.Windows.Forms.Button ELAndTheCreatorBt;
         private System.Windows.Forms.Button AddCardCreatorBt;
+        private System.Windows.Forms.Button CreatePDFBt;
     }
 }
 

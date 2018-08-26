@@ -7,7 +7,7 @@ namespace KKSysForms
 {
     public partial class Form1 : Form
     {
-
+        static int cards = 0;
      
         public Form1()
         {
@@ -19,18 +19,22 @@ namespace KKSysForms
                 System.Collections.Generic.List<KKSysForms_CardModel.Theme> them = el.getThemeList();
                 foreach (KKSysForms_CardModel.Theme th in them)
                 {
-                    this.ThemeBoxCreatorCB.Items.Add(th.ThemeName);
+                    this.ThemeBoxCreatorCB.Items.Add(th);
                 }
-                this.EvBoxCreatorCb.Items.Add(el.Name);
+                this.EvBoxCreatorCb.Items.Add(el);
+                
             }
            
             
         }
 
+   
+
         private void Form1_FormClosed(object sender, FormClosedEventArgs e)
         {
             if (!Controller.system.Stored)
             {
+                
                 Controller.system.Stored = true;
             }   
         }
@@ -107,7 +111,7 @@ namespace KKSysForms
 
         private void tabPage2_Click(object sender, EventArgs e)
         {
-            Controller.system.CreatePDF();
+           
         }
 
         private void AddCardCreatorBt_Click(object sender, EventArgs e)
@@ -119,8 +123,11 @@ namespace KKSysForms
 
             
 
-            Controller.system.CreateCards(this.ThemeBoxCreatorCB.Text, this.QHeadTB.Text
+            Controller.system.CreateCards((KKSysForms_CardModel.Theme)this.ThemeBoxCreatorCB.SelectedItem, this.QHeadTB.Text
                 , this.AHeadTB.Text, this.QContentTB.Text, this.AContentTB.Text);
+
+            cards++;
+            this.InsertLabel.Text = cards.ToString();
         }
 
         private void ELAndTheCreatorBt_Click(object sender, EventArgs e)
@@ -147,7 +154,25 @@ namespace KKSysForms
 
         private void EvBoxCreatorCb_SelectedIndexChanged(object sender, EventArgs e)
         {
-            Controller.system.SetCurrentEventLabelTarget(this.EvBoxCreatorCb.Text);
+            Controller.system.SetCurrentEventLabelTarget((KKSysForms_Event.EventLabel)this.EvBoxCreatorCb.SelectedItem);
+            
+            this.ThemeBoxCreatorCB.Items.Clear();
+            foreach (KKSysForms_CardModel.Theme th in Controller.system.currentTarget.getThemeList())
+            {
+                this.ThemeBoxCreatorCB.Items.Add(th);
+
+            }
+            this.ThemeBoxCreatorCB.Update();
+        }
+
+        private void CreatePDFBt_Click(object sender, EventArgs e)
+        {
+            Controller.system.CreatePDF((KKSysForms_CardModel.Theme)ThemeBoxCreatorCB.SelectedItem);
+        }
+
+        private void ThemeBoxCreatorCB_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            Controller.system.SetCurrentThemeTarget((KKSysForms_CardModel.Theme)this.ThemeBoxCreatorCB.SelectedItem);
         }
     }
 

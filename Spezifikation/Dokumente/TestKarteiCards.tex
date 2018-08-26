@@ -1,19 +1,16 @@
 \documentclass[
 a4paper,
 twoside,
-%DIV=60,
-%BCOR=0mm,
 headlineinclude=false,
 footinclude=false,
 numbers=noenddot,
-%headheight=40pt,
 landscape, 11pt]{scrartcl}
 \usepackage{tabularx}
 \usepackage[left = 0.2875cm, right = -0.575cm, 
 top = 0cm, bottom=0cm]{geometry}
 \begin{document}
 	
-	%temporaer
+	
 	\newcolumntype{C}[1]{>{\centering\arraybackslash}p{#1}}
 	
 	\begin{tabular}{|C{6.9cm}| C{6.9cm}| C{6.9cm} | C{6.9cm}|}
@@ -30,7 +27,6 @@ top = 0cm, bottom=0cm]{geometry}
 		\parbox[c][5.2cm][c]{6.9cm}{ \centerline{Card 4.one ?}	}& 	\parbox[c][5.2cm][c]{6.9cm}{ \centerline{Card 4.two ?}	} 
 			&\parbox[c][5.2cm][c]{6.9cm}{ \centerline{Card 4.three ?}	} & 	\parbox[c][5.2cm][c]{6.9cm}{ \centerline{Card 4.four ?}	} \\
 	\end{tabular}
-%\newpage
 
 	\begin{tabular}{|C{6.9cm}| C{6.9cm}| C{6.9cm} | C{6.9cm}|}
 	\parbox[c][5.2cm][c]{6.9cm}{ \centerline{Card four !}	}

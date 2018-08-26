@@ -21,12 +21,14 @@ namespace KKSysForms
 
         private DatabaseConnector database;
 
-        private EventLabel currentTarget;
+        public EventLabel currentTarget;
+
+        public Theme currentThemeTarget;
 
         //Need to be static
         public List<EventLabel> loadedLabel;
 
-        public List<Theme> currentTargetThemes;
+       
 
         public DateTime today;
 
@@ -45,7 +47,7 @@ namespace KKSysForms
                 }
                 else
                 {
-                    Stored = value;
+                    datastored = value;
                 }
             }
         }
@@ -54,52 +56,59 @@ namespace KKSysForms
         public KKSys()
         {
             database = DatabaseConnector.getInstance();
-            loadedLabel = database.InitialCallEventLabel_Repeat();
+            loadedLabel = database.InitialCallDatabase();
+            currentTarget = loadedLabel.ElementAt(0);
             
           
         }
 
-        public void CreatePDF()
+        public void CreatePDF(Theme name)
         {
-            GeneratePDF.GeneratePDFFile(currentTarget.getThemeList().First().GetQA(), "TestTex");
+            
+            GeneratePDF.GeneratePDFFile(name.GetQA(), name.ThemeName);
         }
 
         public void CreateEventLabel(String name)
         {
             EventLabel tmp = new EventLabel(name, false);
             loadedLabel.Add(tmp);
+            currentTarget = tmp;
+            Stored = false;
         }
 
-        public void SetCurrentEventLabelTarget(String name)
+        public void SetCurrentEventLabelTarget(EventLabel el)
         {
-            foreach (EventLabel label in loadedLabel)
-            {
-                if (label.Name == name)
-                {
-                    currentTarget = label;
-                    break;
-                }
-            }
+            this.currentTarget = el;
+            currentThemeTarget = null;
+        }
+
+        public void SetCurrentThemeTarget(Theme th)
+        {
+            this.currentThemeTarget = th;
         }
 
         public void CreateTheme(String name)
         {
-            Theme them = new Theme(name);
+            Theme them = new Theme(name, false);
             currentTarget.getThemeList().Add(them);
+            Stored = false;
 
         }
 
         //TODO: Rework that shit
-        public void CreateCards(String theme,String qhead, String ahead, String qcontent, String acontent)
+        public void CreateCards(Theme theme,String qhead, String ahead, String qcontent, String acontent)
         {
-            Theme tmp = new Theme("None");
-            tmp.IDatabaseID = 0;
+            
             CompositeDatatype test, tmpo;
             test = new CompositeDatatype();
             test.AddComponent(new Text(qcontent));
             tmpo = new CompositeDatatype();
             tmpo.AddComponent(new Text(acontent));
-            tmp.AddCard(new QACard(qhead, ahead, test, tmpo));
+           
+            currentThemeTarget.AddCard(new QACard(qhead, ahead, test, tmpo));
+                    
+           
+          
 
         }
 
@@ -139,6 +148,8 @@ namespace KKSysForms
         {
 
         }
+
+        
 
     }
 }

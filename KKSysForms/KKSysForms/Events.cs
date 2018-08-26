@@ -76,6 +76,7 @@ namespace KKSysForms_Event
 
 
     //Enthaelt Information ueber das Label mehrere Veranstaltungen
+    //Sortieralgorithmus -> Alphabetische Abfolge
     class EventLabel : KKSysForms_Interfaces.DatabaseMark
     {
 
@@ -104,8 +105,6 @@ namespace KKSysForms_Event
 
         private List<Event> eventsUnderLabel;
         private List<Theme> themeUnderLabel;
-
-       
 
         public EventLabel(String label, bool fromDatabase)
         {
@@ -137,6 +136,11 @@ namespace KKSysForms_Event
         public List<Theme> getThemeList()
         {
             return this.themeUnderLabel;
+        }
+
+        public override String ToString()
+        {
+            return this._name;
         }
 
         

@@ -49,8 +49,7 @@ namespace KKSysDatabase
 
         //Sollten wir auf Dateisystemebene verstecken
         private const String databaseName = "KKSys.db";
-        //maybe not needed
-        private static String pathToDb;
+        
 
         public static DatabaseConnector getInstance()
         {
@@ -77,109 +76,79 @@ namespace KKSysDatabase
             //Wie bekommen wir die Tags hierhin?
             
         }
-        //TODO Highly change this method
-        //This method should load all EventLabel from database and should load all weekly and incomming events
-        //Was ist, wenn die Datenbank leer ist? vorher anfragen ob eine Tabelle mit Settings existiert! TODO
-        //Weniger Variablen waeren schön
-        //TODO: NonRepeat and Replace
-        //Change to private -> public List<KKSysForms_Event.EventLabel> InitialCallDatabase(){}
-        //TODO: Auskapseln des EventLabel insert update etc...
-        public List<KKSysForms_Event.EventLabel> InitialCallEventLabel_Repeat()
+
+        //InitialCall to Database - returns all EventLabels, Events and Themes 
+        public List<KKSysForms_Event.EventLabel> InitialCallDatabase()
         {
-            //Befehl zuruecksetzen
+            List<KKSysForms_Event.EventLabel> eventLabels = GetEventLabels();
+            foreach (EventLabel el in eventLabels)
+            {
+                el.getEventList().AddRange(GetRepeatEvents(el));
+                el.getThemeList().AddRange(GetThemes(el));
+            }
+            return eventLabels;
+        }
+
+
+        private List<KKSysForms_Event.EventLabel> GetEventLabels()
+        {
             ResetCommand();
-            //Liste die zurueckgegeben wird - leer
             List<EventLabel> returnList = new List<EventLabel>();
-            //Warteschlange fuer die einzelnen Labels - leer
-            Queue<EventLabel> queue = new Queue<EventLabel>();
-            //Liste mit den IDs -> sollte querey sein
-            
             command.CommandText = "SELECT * FROM EventLabel WHERE ID > 0";
 
             resultTable = command.ExecuteReader();
-           
+
             //Hier werden alle EventLabels ermittelt
             while (resultTable.Read())
             {
-
-                
                 EventLabel eventLabel = new EventLabel(resultTable[1].ToString(), true);
                 eventLabel.IDatabaseID = resultTable.GetInt64(0);
-                queue.Enqueue(eventLabel);
+                returnList.Add(eventLabel);
             }
-            //Ergebnistablle schlieszen
             resultTable.Close();
+            return returnList;
 
-            
-            //Aktuell zu betrachtendes EventLabel
-            EventLabel el;
-            //Speicher fuer das Blob object
+
+        }
+
+     
+
+        //First we Try to get all Repeatevents
+        //Restruct EventLabel.Events
+        private List<Event> GetRepeatEvents(EventLabel el)
+        {
+            List<Event> returnList = new List<Event>();
+            command.CommandText = "SELECT ID,serialized FROM RepeatEvents WHERE LabelID =" + el.IDatabaseID + ";";
             byte[] serialized;
-            //Inaktive Events beachten! TODO
-            //TODO: Maybe try to reduce this to one loop except for 3 Loops for all kinds of Events
-            while (queue.Count != 0)
+            RepeatEvent re;
+            resultTable = command.ExecuteReader();
+            while (resultTable.Read())
             {
-                el = queue.Dequeue();
-                //This Command gets the serial of the label
-                //Waehle shit from Database
-                command.CommandText = "SELECT ID,serialized FROM RepeatEvents WHERE LabelID =" + el.IDatabaseID + ";";
-
-                //Eventlabel wird herausgenommen
-                
-                //Die Ergebnis tabelle
-                resultTable = command.ExecuteReader();
-
-
-
-
-                //Schleife, erste Zeile wurde bereitsgeladen
-                while (resultTable.Read())
-                {
-
-                   
-                    //Event Object 
-                    serialized = (byte[])resultTable.GetValue(1);
-
-                    RepeatEvent tempEvent = (RepeatEvent)Serialize.GetDeserializeObject(serialized);
-                  
-                    //Setting EventID
-                    tempEvent.IDatabaseID = resultTable.GetInt64(0);
-                  
-                    //Haengen das Event an das Eventlaebel an
-                    el.addEvent(tempEvent);
-                    tempEvent = null;
-
-
-
-
-                }
-                returnList.Add(el);
-                resultTable.Close();
-
-
-             
-               
-
+                serialized = (byte[])resultTable.GetValue(1);
+                re = (RepeatEvent)Serialize.GetDeserializeObject(serialized);
+                re.IDatabaseID = resultTable.GetInt64(0);
+                returnList.Add(re);
             }
-            
+            resultTable.Close();
             return returnList;
         }
 
-        //Threads....
-        public List<Tag> InitialAsyncCallTagList()
+        private List<KKSysForms_CardModel.Theme> GetThemes(EventLabel el)
         {
-
-            ResetCommand();
-            
-            return null;
-
+            List<Theme> returnList = new List<Theme>();
+            Theme thm;
+            command.CommandText = "SELECT ID, nameOf FROM Thema WHERE belongsTO = " + el.IDatabaseID + ";";
+            resultTable = command.ExecuteReader();
+            while (resultTable.Read())
+            {
+                thm = new Theme(resultTable.GetString(1), true);
+                thm.IDatabaseID = resultTable.GetInt64(0);
+                returnList.Add(thm);
+            }
+            resultTable.Close();
+            return returnList;
         }
 
-        //Threads.... oder synchron
-        public List<Theme> InitialAsyncCallThemeList()
-        {
-            return null;
-        }
 
         //TODO
         //This Method executes a Filter
@@ -221,7 +190,7 @@ namespace KKSysDatabase
                     {
                         command.CommandText = "INSERT INTO Thema (nameOf, belongsTo) VALUES ('" + th.ThemeName + "', " + el.IDatabaseID + ");";
                         command.ExecuteNonQuery();
-                        command.CommandText = "SELECT ID From EventLabel where nameOf = '" + th.ThemeName + "' and belongsTo = " + el.IDatabaseID + ";";
+                        command.CommandText = "SELECT ID From Thema where nameOf = '" + th.ThemeName + "' and belongsTo = " + el.IDatabaseID + ";";
                         resultTable = command.ExecuteReader();
                         resultTable.Read();
                         th.IDatabaseID = resultTable.GetInt64(0);

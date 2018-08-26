@@ -70,15 +70,16 @@ namespace KKSysForms_CardModel
 
         private List<QACard> qAList;
 
-        public bool hasLabel { get; set; }
+        
 
-        public Theme(String name)
+       
+
+        public Theme(String name, bool fromDatabase)
         {
-            ICreated = true;
+            ICreated = !fromDatabase;
             this.ThemeName = name;
             this.contentList = new List<ContentCard>();
             this.qAList = new List<QACard>();
-
 
         }
 
@@ -102,6 +103,11 @@ namespace KKSysForms_CardModel
         {
             return this.qAList;
         }
+
+        public override string ToString()
+        {
+            return this.name;
+        }
     }
 
     //Serialisierung der anderen Objekte als Byte[] objekt - sprich erst umwandlung in byte, dann
@@ -121,21 +127,22 @@ namespace KKSysForms_CardModel
 
         public CompositeDatatype content { get; set; }
 
-     
+        //Currently not implemented
         private List<Tag> tags { get; }
 
         public ContentCard(String header,  CompositeDatatype content)
         {
             this.header = header;
             this.content = content;
-            this.tags = new List<Tag>();
+            
         }
 
+        [Obsolete]
         public void addTag(Tag tag)
         {
             this.tags.Add(tag);
         }
-
+        [Obsolete]
         public void removeTag(Tag tag)
         {
             this.tags.Remove(tag);
@@ -143,7 +150,7 @@ namespace KKSysForms_CardModel
 
         public ContentCard(SerializationInfo info, StreamingContext context)
         {
-
+            
         }
 
         public override void GetObjectData(SerializationInfo info, StreamingContext context)

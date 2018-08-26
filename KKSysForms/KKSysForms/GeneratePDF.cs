@@ -19,16 +19,17 @@ namespace KKSysForms_PDFCreate
         public static String NameOfFile = "KKSys_";
 
         //Sollte Nutzung der Klasse, Page definition beinhalten
-        private const String TEX_HEADER = "\\documentclass[a4paper,twoside,%DIV=60,%BCOR=0mm,headlineinclude=false,footinclude=false,numbers=noenddot,%headheight=40pt,landscape, 11pt]{scrartcl}\\usepackage{tabularx}\\usepackage[left = 0.2875cm, right = -0.575cm,top = 0cm, bottom = 0cm]{geometry} \\begin{document}  ";
+        private const String TEX_HEADER = "\\documentclass[a4paper,twoside,footinclude=false,numbers=noenddot,landscape, 11pt]{scrartcl}\\usepackage{tabularx}\\usepackage[left = 0.2875cm, right = -0.575cm,top = 0cm, bottom = 0cm]{geometry} \\begin{document}  ";
         private const String TEX_DEF = "\\newcolumntype{C}[1]{>{\\centering\\arraybackslash}p{#1}}";
         private const String TEX_TABULAR_DEF = "\\begin{tabular}{C{6.9cm}| C{6.9cm}| C{6.9cm} | C{6.9cm}}";
         private const String TEX_TABULAR_DEF_NOLINE = "\\begin{tabular}{C{6.9cm} C{6.9cm} C{6.9cm}  C{6.9cm}}";
-        private const String TEX_TABULAR_END = "\\end{tabular}";
+        private const String TEX_TABULAR_END = "\\end{tabular} \\";
         //Multicol for header and footer in cell?
         private const String TEX_CELL_START = "	\\parbox[c][5.2cm][c]{6.9cm}{\\centerline{";
         private const String TEX_CELL_END = "}}";
         private const String TEX_COL_SWITCH = "&";
-        private const String TEX_ROW_SWITCH = "\\\\";
+        private const String TEX_ROW_SWITCH = "\\\\ ";
+        private const String TEX_HLINE = "\\hline";
         private const String TEX_END = "\\end{document}";
 
 
@@ -37,6 +38,8 @@ namespace KKSysForms_PDFCreate
         {
             NameOfFile = NameOfFile + outputName + ".tex";
             GenerateTexOutput(printable);
+            CompileTexToPdf();
+            
         }
 
         private static void GenerateTexOutput(List<QACard> cards)
@@ -48,55 +51,69 @@ namespace KKSysForms_PDFCreate
                 questionQueue.Enqueue(card.questionContent);
                 answerQueue.Enqueue(card.answerContent);
             }
-            answerQueue.Reverse();
+           answerQueue =  (Queue<Datatype>)answerQueue.Reverse();
 
 
             String generalOutput = "";
             String frontPage = TEX_HEADER +TEX_DEF+TEX_TABULAR_DEF;
             String backPage = TEX_TABULAR_DEF_NOLINE;
             int cellCount = 0;
+            int entryCount = 0;
             String tmp = "";
             String tmpEnd = "";
             
             while (questionQueue.Count != 0)
             {
-                if (cellCount % 4 == 0 && cellCount != 0)
-                {
-                    tmpEnd = TEX_ROW_SWITCH;
-                }
-                else
-                {
-                    tmpEnd = TEX_COL_SWITCH;
-                }
-                tmp = TEX_CELL_START + questionQueue.Dequeue().ToTex() + TEX_CELL_END + tmpEnd;
+             
+                //Erstellen der Frontpage Zelle
+                tmp = TEX_CELL_START + questionQueue.Dequeue().ToTex() + TEX_CELL_END;
                 frontPage = frontPage + tmp;
 
-                tmp = TEX_CELL_START + answerQueue.Dequeue().ToTex() + TEX_CELL_END + tmpEnd;
+                tmp = TEX_CELL_START + answerQueue.Dequeue().ToTex() + TEX_CELL_END;
                 backPage = backPage + tmp;
 
+                //Abhier sind beide Queues lenght-1
+                //Erhoehen anzahl der Zellen
+                //1 = 1 Eintrag, 2 = 2 Eintrag, 3 = 3 Eintrag, 4 = 4 Eintrag
                 cellCount++;
+                entryCount++;
+                //Abfrage ob schon die letzte Spalte erreicht ist
+                if (entryCount == 4)
+                {
+                    frontPage = frontPage + TEX_ROW_SWITCH;
+                    backPage = backPage + TEX_ROW_SWITCH;
+                    if (cellCount != 16)
+                    {
+                        frontPage = frontPage + TEX_HLINE;
+                        backPage = backPage + TEX_HLINE;
+                    }
+                    entryCount = 0;
+                }
+                //Sonst wird ein Spaltenwechsel ausgeloest
+                else
+                {   frontPage = frontPage + TEX_COL_SWITCH;
+                    backPage = backPage + TEX_COL_SWITCH;
+                    tmpEnd = TEX_COL_SWITCH;
+                }
+
+
                 if (cellCount == 16)
                 {
-                    generalOutput = generalOutput + frontPage + TEX_TABULAR_END + backPage + TEX_TABULAR_END;
+                    generalOutput = generalOutput + frontPage + TEX_TABULAR_END + "\\\\ "+ backPage + TEX_TABULAR_END;
                     frontPage = TEX_TABULAR_DEF;
                     backPage = TEX_TABULAR_DEF_NOLINE;
                     cellCount = 0;
+                    entryCount = 0;
                    
                 }
                
             }
 
-            if (sw == null)
-            {
-                sw = new StreamWriter(new FileStream(NameOfFile, FileMode.OpenOrCreate));
-            }
-            else
-            {
-                sw.Close();
-                sw.Dispose();
-                sw = new StreamWriter(new FileStream(NameOfFile, FileMode.OpenOrCreate));
-            }
-            sw.Write(generalOutput +TEX_END);
+
+            File.WriteAllText(NameOfFile,generalOutput +" "+TEX_END);
+           
+            
+
         }
 
         private static void CompileTexToPdf()
@@ -104,18 +121,17 @@ namespace KKSysForms_PDFCreate
 
             System.Diagnostics.Process process = new System.Diagnostics.Process();
             System.Diagnostics.ProcessStartInfo startInfo = new System.Diagnostics.ProcessStartInfo();
-            startInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
-            startInfo.FileName = "cmd.exe";
-            startInfo.Arguments = "/C pdflatex -interaction=nonstopmode " + NameOfFile;
-            startInfo.WorkingDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) ; 
+            startInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Normal;
+            startInfo.FileName = "pdflatex.exe";
+            startInfo.Arguments = String.Concat("--interaction=nonstopmode --synctex=0 ", NameOfFile);
+            // startInfo.WorkingDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) ; 
+            startInfo.CreateNoWindow = false;
             process.StartInfo = startInfo;
             process.Start();
+            
+            
 
-            if (process.ExitCode == 0)
-            {
-                process.Dispose();
-            }
-            process.Dispose();
+            
 
         }
 
