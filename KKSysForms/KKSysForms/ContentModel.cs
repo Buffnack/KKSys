@@ -14,6 +14,7 @@ using System.Runtime.Serialization;
 namespace KKSysForms_DataTypes
 {
     //Abstract Class for the COmposite
+    [Serializable]
     abstract class Datatype
     {
 
@@ -28,6 +29,7 @@ namespace KKSysForms_DataTypes
 
     }
     //Elemntary Text Datatype equals to String
+    [Serializable]
     class Text : Datatype
     {
         private String content;
@@ -43,6 +45,7 @@ namespace KKSysForms_DataTypes
     }
 
     //Not implemented
+    
     class Graphics : Datatype
     {
         private Image content;
@@ -69,6 +72,7 @@ namespace KKSysForms_DataTypes
         }
     }
 
+    [Serializable]
     class CompositeDatatype : Datatype
     {
         private List<Datatype> components;

@@ -15,8 +15,16 @@ namespace KKSysForms_SerializeBoundModul
 
         private static void KillMemoryStream ()
         {
-            ms.Close();
-            ms.Dispose();
+            if (ms != null)
+            {
+                ms.Close();
+                ms.Dispose();
+            }
+            else
+            {
+                return;
+            }
+          
         }
 
         public static Object GetDeserializeObject(byte[] data) 

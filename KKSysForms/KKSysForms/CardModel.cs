@@ -221,6 +221,7 @@ namespace KKSysForms_CardModel
 
         public QACard(String questHead, String ansHead, CompositeDatatype question, CompositeDatatype answer)
         {
+            this.ICreated = true;
             this.QuestionHeader = questHead;
             this.AnswerHeader = ansHead;
             this.QuestionContent = question;
@@ -230,6 +231,7 @@ namespace KKSysForms_CardModel
 
         public QACard(SerializationInfo info, StreamingContext context)
         {
+            
             this.QuestionHeader = info.GetString("qHead");
             this.QuestionContent =(CompositeDatatype) info.GetValue("qCont", typeof(Datatype));
             this.AnswerHeader = info.GetString("aHead");

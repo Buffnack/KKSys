@@ -14,7 +14,7 @@ namespace KKSysForms
             InitializeComponent();
             Controller.initSystem();
 
-            foreach (KKSysForms_Event.EventLabel el in Controller.system.loadedLabel)
+            foreach (KKSysForms_Event.EventLabel el in Controller.system.GetLoadedReference())
             {
                 System.Collections.Generic.List<KKSysForms_CardModel.Theme> them = el.getThemeList();
                 foreach (KKSysForms_CardModel.Theme th in them)
@@ -119,11 +119,9 @@ namespace KKSysForms
             if (this.QContentTB.Text == "" || this.QHeadTB.Text == "" || this.AHeadTB.Text == "" || this.AContentTB.Text == "")
             {
                 return;
-            }
+            }    
 
-            
-
-            Controller.system.CreateCards((KKSysForms_CardModel.Theme)this.ThemeBoxCreatorCB.SelectedItem, this.QHeadTB.Text
+            Controller.system.CreateCards(null, this.QHeadTB.Text
                 , this.AHeadTB.Text, this.QContentTB.Text, this.AContentTB.Text);
 
             cards++;
@@ -154,10 +152,10 @@ namespace KKSysForms
 
         private void EvBoxCreatorCb_SelectedIndexChanged(object sender, EventArgs e)
         {
-            Controller.system.SetCurrentEventLabelTarget((KKSysForms_Event.EventLabel)this.EvBoxCreatorCb.SelectedItem);
+            Controller.system.SetCurrentEventLabelTarget((KKSysForms_Event.EventLabel)EvBoxCreatorCb.SelectedItem);
             
             this.ThemeBoxCreatorCB.Items.Clear();
-            foreach (KKSysForms_CardModel.Theme th in Controller.system.currentTarget.getThemeList())
+            foreach (KKSysForms_CardModel.Theme th in Controller.system.GetCurrentEventLabelTargetReference().getThemeList())
             {
                 this.ThemeBoxCreatorCB.Items.Add(th);
 

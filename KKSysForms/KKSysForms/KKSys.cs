@@ -21,9 +21,9 @@ namespace KKSysForms
 
         private DatabaseConnector database;
 
-        public EventLabel currentTarget;
+        private EventLabel currentTarget;
 
-        public Theme currentThemeTarget;
+        private Theme currentThemeTarget;
 
         //Need to be static
         public List<EventLabel> loadedLabel;
@@ -78,6 +78,21 @@ namespace KKSysForms
           
         }
 
+        public ref List<EventLabel> GetLoadedReference()
+        {
+            return ref loadedLabel;
+        }
+
+        public ref EventLabel GetCurrentEventLabelTargetReference()
+        {
+            return ref currentTarget;
+        }
+
+        public ref Theme GetCurrentThemeReference()
+        {
+            return ref currentThemeTarget;
+        }
+
         public void CreatePDF(Theme name)
         {
             
@@ -94,13 +109,25 @@ namespace KKSysForms
 
         public void SetCurrentEventLabelTarget(EventLabel el)
         {
-            this.currentTarget = el;
+            foreach (EventLabel find in loadedLabel)
+            {
+                if (el.Name == find.Name)
+                {
+                    currentTarget = find;
+                }
+            }
             currentThemeTarget = null;
         }
 
         public void SetCurrentThemeTarget(Theme th)
         {
-            this.currentThemeTarget = th;
+            foreach (Theme find in currentTarget.getThemeList())
+            {
+                if (th.ThemeName == find.ThemeName)
+                {
+                    currentThemeTarget = find;
+                }
+            }
         }
 
         public void CreateTheme(String name)
@@ -122,6 +149,7 @@ namespace KKSysForms
             tmpo.AddComponent(new Text(acontent));
            
             currentThemeTarget.AddCard(new QACard(qhead, ahead, test, tmpo));
+            Stored = false;
                     
            
           

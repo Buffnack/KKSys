@@ -54,7 +54,7 @@ namespace KKSysForms_PDFCreate
                 questionQueue.Enqueue(card.QuestionContent);
                 answerQueue.Enqueue(card.AnswerContent);
             }
-           answerQueue =  (Queue<Datatype>)answerQueue.Reverse();
+           answerQueue =  new Queue<Datatype>(answerQueue.Reverse());
 
 
             String generalOutput = "";
