@@ -40,10 +40,26 @@ namespace KKSysForms
         public bool Stored
         {
             get { return datastored; }
-            set { if (value)
+            set {
+                if (value)
                 {
                     DatabaseConnector.getInstance().InsertData(this.loadedLabel);
                     datastored = value;
+                    if (loadedLabel.Contains(currentTarget))
+                    {
+                        if (currentTarget.getThemeList().Contains(currentThemeTarget))
+                        {
+
+                        }
+                        else
+                        {
+                            throw new Exception("Damn it");
+                        }
+                    }
+                    else
+                    {
+                        throw new Exception("Damn it 2");
+                    }
                 }
                 else
                 {

@@ -10,6 +10,9 @@ using System.Reflection;
 
 namespace KKSysForms_PDFCreate
 {
+    //TODO:  Create own Folder, delete tex file and delte .aux, .log etc
+    //TODO: Multirow for Karteikarte: Theme // QHeader (1. Row) // Content oder?
+    
     static class GeneratePDF
     {
         
@@ -48,8 +51,8 @@ namespace KKSysForms_PDFCreate
             Queue<Datatype> answerQueue = new Queue<Datatype>();
             foreach (QACard card in cards)
             {
-                questionQueue.Enqueue(card.questionContent);
-                answerQueue.Enqueue(card.answerContent);
+                questionQueue.Enqueue(card.QuestionContent);
+                answerQueue.Enqueue(card.AnswerContent);
             }
            answerQueue =  (Queue<Datatype>)answerQueue.Reverse();
 

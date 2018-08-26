@@ -32,6 +32,9 @@ namespace KKSysDatabase
    //Fehlt: Onetime events
    //Befuerchtung: Synchroner Aufruf wuerde kollidieren mit der GUI: Sprich keine Reaktion solange gewartet wird
    //Sollte daher in einem Thread ablaufen
+   //TODO: Filter-Anfrage
+   //TODO: Events werden noch nicht rangeholt... bzw vollständig rangeholt
+   //TODO: Create hide folder with Database!
     class DatabaseConnector
     {
         public static List<KKSysForms_CardModel.Card> AddToDatabase = new List<KKSysForms_CardModel.Card>();
@@ -89,7 +92,6 @@ namespace KKSysDatabase
             return eventLabels;
         }
 
-
         private List<KKSysForms_Event.EventLabel> GetEventLabels()
         {
             ResetCommand();
@@ -110,8 +112,6 @@ namespace KKSysDatabase
 
 
         }
-
-     
 
         //First we Try to get all Repeatevents
         //Restruct EventLabel.Events
@@ -210,8 +210,7 @@ namespace KKSysDatabase
 
             }
         }
-        //TODO: Change to private
-        //Auskapsel von EventLabel insert!
+        //TODO: Implement NonRepeatEvents
         private void InsertEvents(EventLabel el)
         {
             ResetCommand();
@@ -247,95 +246,14 @@ namespace KKSysDatabase
 
                     else if (re.IModified)
                     {
-                        bool updateDay = false;
-                        bool updateName = false;
-                        bool updateLabel = false;
 
-                         
-                        command.CommandText = "SELECT LabelID,nameOf, DayCode FROM RepeatEvents WHERE ID =" + re.IDatabaseID + ";";
-
-                        resultTable = command.ExecuteReader();
-                        resultTable.Read();
-                        Int64 databaseLabelID = (Int64)resultTable.GetInt64(0);
-                        List<DayOfWeek> databaseDays = this.parseDatabaseDayCodeToList(resultTable.GetString(2));
-                        String databaseName = resultTable.GetString(1);
-                        resultTable.Close();
-                        if (databaseDays.Count != re.dayCode.Count)
-                        {
-                            updateDay = true;
-                        }
-                        else
-                        {
-                            foreach (DayOfWeek d in databaseDays)
-                            {
-                                if (!re.dayCode.Contains(d))
-                                {
-                                    updateDay = true;
-                                }
-                            }
-                        }
-
-                        //Checking Name Update
-                        if (!databaseName.Equals(re.Name))
-                        {
-                            updateName = true;
-                        }
-
-
-                        //Checkin Label
-                            
-                        if (el.ICreated)
-                        {
-                            updateLabel = true;
-                        }
-                        else
-                        {
-  
-                            if (el.IDatabaseID != databaseLabelID)
-                            {
-                                updateLabel = true;
-                            }
-                        }
-
-                        //Anfrage generieren
-                        String cmdGen = "UPDATE RepeatEvents SET ";
-                        if (updateLabel)
-                        {
-
-                            if (el.ICreated)
-                            {
-                                //Muss so sein, da EL noch keine ID hat
-                                command.CommandText = "INSERT INTO EventLabel (nameOf) VALUES ('" + el.Name + "');";
-                                command.ExecuteNonQuery();
-                                command.CommandText = "SELECT ID FROM EventLabel WHERE nameOf = '" + el.Name + "';";
-                                resultTable = command.ExecuteReader();
-                                el.IDatabaseID = resultTable.GetInt64(0);
-                                resultTable.Close();
-                                //Got The new Created ID
-
-                            }
-                            cmdGen = cmdGen + "LabelID = " + el.IDatabaseID + ",";
-                        }
-
-                        if (updateName)
-                        {
-                            cmdGen = cmdGen + "nameOf = '" + re.Name + "',";
-                        }
-                        if (updateDay)
-                        {
-                            cmdGen = cmdGen + " dayCode = '" + generateDayCodeKurz(re.dayCode) + "',";
-                        }
-                        //Ofc update serialized Object
-                        command.CreateParameter();
-                      
-                        byte[] data = Serialize.GetSerializeByte(re);
+                        //Anfrage
+                        String cmdGen= "UPDATE RepeatEvents SET LabelID = "+ el.IDatabaseID + ", nameOf =" + re.Name + "',dayCode = '" + generateDayCodeKurz(re.dayCode) + "',serialized = ? WHERE ID = " + re.IDatabaseID + ";";
                         
-                        cmdGen = cmdGen + "serialized = ? WHERE ID = " + re.IDatabaseID+";";
                         SQLiteParameter param = new SQLiteParameter();
                         command.CommandText = cmdGen;
                         command.Parameters.Add(param);
-                        param.Value = data;
-
+                        param.Value = Serialize.GetSerializeByte(re);
                         command.ExecuteNonQuery();
 
                     }
@@ -364,8 +282,7 @@ namespace KKSysDatabase
             }
         }
         
-        //Kapsel Eventlabel update/Insert aus aus beiden FUnktionen
-        //TODO: Tags besser definiert!
+        //TODO: Maybe change param
         private void InsertCard(EventLabel el)
         {
             ResetCommand();

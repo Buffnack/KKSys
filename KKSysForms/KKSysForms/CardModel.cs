@@ -9,7 +9,7 @@ using KKSysForms_Filter;
 //TODO: Fill this class
 namespace KKSysForms_CardModel
 {
-
+    //TODO: Implement ContentCard
     class Tag : KKSysForms_Interfaces.DatabaseMark
     {
        
@@ -163,39 +163,88 @@ namespace KKSysForms_CardModel
     [Serializable]
     class QACard : Card
     {
+        private String qHead, aHead;
 
-        public String questionHeader { get; set; }
+        private CompositeDatatype qContent, aContent;
 
-        public String answerHeader { get; set; }
+        //Do We need this?
+        public String QuestionHeader
+        {
+            get
+            {
+                return this.qHead;
+            }
+            set
+            {
+                this.qHead = value;
+            }
+        }
 
-        public CompositeDatatype questionContent { get; set; }
+        //DO we need this?
+        public String AnswerHeader
+        {
+            get
+            {
+                return this.aHead;
+            }
+            set
+            {
+                this.aHead = value;
+            }
+        }
 
-        public CompositeDatatype answerContent { get; set; }
+        public CompositeDatatype QuestionContent
+        {
+            get
+            {
+                return this.qContent;
+            }
+            set
+            {
+                this.qContent = value;
+            }
+        }
+
+        public CompositeDatatype AnswerContent
+        {
+            get
+            {
+                return this.aContent;
+            }
+            set
+            {
+                this.aContent = value;
+            }
+        }
 
         private List<Tag> tags { get; }
 
         public QACard(String questHead, String ansHead, CompositeDatatype question, CompositeDatatype answer)
         {
-            this.questionHeader = questHead;
-            this.answerHeader = ansHead;
-            this.questionContent = question;
-            this.answerContent = answer;
+            this.QuestionHeader = questHead;
+            this.AnswerHeader = ansHead;
+            this.QuestionContent = question;
+            this.AnswerContent = answer;
             this.tags = new List<Tag>();
         }
 
         public QACard(SerializationInfo info, StreamingContext context)
         {
-
+            this.QuestionHeader = info.GetString("qHead");
+            this.QuestionContent =(CompositeDatatype) info.GetValue("qCont", typeof(Datatype));
+            this.AnswerHeader = info.GetString("aHead");
+            this.AnswerContent = (CompositeDatatype)info.GetValue("aCont", typeof(Datatype));
+            
         }
 
         public void SetQuestionContent(Datatype Content)
         {
-            this.questionContent.AddComponent(Content);
+            this.QuestionContent.AddComponent(Content);
         }
 
         public void SetAnswerContent(Datatype Content)
         {
-            this.answerContent.AddComponent(Content);
+            this.AnswerContent.AddComponent(Content);
         }
 
         public void addTag(Tag tag)
@@ -216,7 +265,10 @@ namespace KKSysForms_CardModel
 
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
-            throw new NotImplementedException();
+            info.AddValue("qHead", this.QuestionHeader);
+            info.AddValue("qCont", this.QuestionContent);
+            info.AddValue("aHead", this.AnswerHeader);
+            info.AddValue("aCont", this.AnswerContent);
         }
     }
 }
