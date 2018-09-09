@@ -56,6 +56,7 @@ namespace KKSysForms
             this.MainTabControl = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.CreatePDFBt = new System.Windows.Forms.Button();
             this.ELAndTheCreatorBt = new System.Windows.Forms.Button();
             this.AddCardCreatorBt = new System.Windows.Forms.Button();
             this.ThemeBoxCreatorCB = new System.Windows.Forms.ComboBox();
@@ -67,7 +68,8 @@ namespace KKSysForms
             this.QContentTB = new System.Windows.Forms.TextBox();
             this.AHeadTB = new System.Windows.Forms.TextBox();
             this.QHeadTB = new System.Windows.Forms.TextBox();
-            this.CreatePDFBt = new System.Windows.Forms.Button();
+            this.QContentCreatedList = new System.Windows.Forms.ListBox();
+            this.AContentCreatedList = new System.Windows.Forms.ListBox();
             this.contextMenuStrip1.SuspendLayout();
             this.panel1.SuspendLayout();
             this.MainTabControl.SuspendLayout();
@@ -292,6 +294,8 @@ namespace KKSysForms
             // 
             // tabPage2
             // 
+            this.tabPage2.Controls.Add(this.AContentCreatedList);
+            this.tabPage2.Controls.Add(this.QContentCreatedList);
             this.tabPage2.Controls.Add(this.CreatePDFBt);
             this.tabPage2.Controls.Add(this.ELAndTheCreatorBt);
             this.tabPage2.Controls.Add(this.AddCardCreatorBt);
@@ -313,6 +317,16 @@ namespace KKSysForms
             this.tabPage2.UseVisualStyleBackColor = true;
             this.tabPage2.Click += new System.EventHandler(this.tabPage2_Click);
             // 
+            // CreatePDFBt
+            // 
+            this.CreatePDFBt.Location = new System.Drawing.Point(459, 363);
+            this.CreatePDFBt.Name = "CreatePDFBt";
+            this.CreatePDFBt.Size = new System.Drawing.Size(280, 63);
+            this.CreatePDFBt.TabIndex = 12;
+            this.CreatePDFBt.Text = "Erstelle PDF";
+            this.CreatePDFBt.UseVisualStyleBackColor = true;
+            this.CreatePDFBt.Click += new System.EventHandler(this.CreatePDFBt_Click);
+            // 
             // ELAndTheCreatorBt
             // 
             this.ELAndTheCreatorBt.Location = new System.Drawing.Point(89, 311);
@@ -325,7 +339,7 @@ namespace KKSysForms
             // 
             // AddCardCreatorBt
             // 
-            this.AddCardCreatorBt.Location = new System.Drawing.Point(856, 268);
+            this.AddCardCreatorBt.Location = new System.Drawing.Point(459, 278);
             this.AddCardCreatorBt.Name = "AddCardCreatorBt";
             this.AddCardCreatorBt.Size = new System.Drawing.Size(280, 52);
             this.AddCardCreatorBt.TabIndex = 9;
@@ -336,7 +350,7 @@ namespace KKSysForms
             // ThemeBoxCreatorCB
             // 
             this.ThemeBoxCreatorCB.FormattingEnabled = true;
-            this.ThemeBoxCreatorCB.Location = new System.Drawing.Point(1015, 68);
+            this.ThemeBoxCreatorCB.Location = new System.Drawing.Point(618, 68);
             this.ThemeBoxCreatorCB.Name = "ThemeBoxCreatorCB";
             this.ThemeBoxCreatorCB.Size = new System.Drawing.Size(121, 33);
             this.ThemeBoxCreatorCB.TabIndex = 8;
@@ -345,7 +359,7 @@ namespace KKSysForms
             // EvBoxCreatorCb
             // 
             this.EvBoxCreatorCb.FormattingEnabled = true;
-            this.EvBoxCreatorCb.Location = new System.Drawing.Point(856, 68);
+            this.EvBoxCreatorCb.Location = new System.Drawing.Point(466, 68);
             this.EvBoxCreatorCb.Name = "EvBoxCreatorCb";
             this.EvBoxCreatorCb.Size = new System.Drawing.Size(121, 33);
             this.EvBoxCreatorCb.TabIndex = 7;
@@ -368,7 +382,7 @@ namespace KKSysForms
             // InsertLabel
             // 
             this.InsertLabel.AutoSize = true;
-            this.InsertLabel.Location = new System.Drawing.Point(662, 158);
+            this.InsertLabel.Location = new System.Drawing.Point(529, 39);
             this.InsertLabel.Name = "InsertLabel";
             this.InsertLabel.Size = new System.Drawing.Size(158, 25);
             this.InsertLabel.TabIndex = 4;
@@ -376,41 +390,49 @@ namespace KKSysForms
             // 
             // AContentTB
             // 
-            this.AContentTB.Location = new System.Drawing.Point(1015, 217);
+            this.AContentTB.Location = new System.Drawing.Point(618, 217);
             this.AContentTB.Name = "AContentTB";
             this.AContentTB.Size = new System.Drawing.Size(121, 31);
             this.AContentTB.TabIndex = 3;
             // 
             // QContentTB
             // 
-            this.QContentTB.Location = new System.Drawing.Point(856, 217);
+            this.QContentTB.Location = new System.Drawing.Point(466, 217);
             this.QContentTB.Name = "QContentTB";
             this.QContentTB.Size = new System.Drawing.Size(121, 31);
             this.QContentTB.TabIndex = 2;
             // 
             // AHeadTB
             // 
-            this.AHeadTB.Location = new System.Drawing.Point(1015, 158);
+            this.AHeadTB.Location = new System.Drawing.Point(618, 158);
             this.AHeadTB.Name = "AHeadTB";
             this.AHeadTB.Size = new System.Drawing.Size(121, 31);
             this.AHeadTB.TabIndex = 1;
             // 
             // QHeadTB
             // 
-            this.QHeadTB.Location = new System.Drawing.Point(856, 158);
+            this.QHeadTB.Location = new System.Drawing.Point(466, 158);
             this.QHeadTB.Name = "QHeadTB";
             this.QHeadTB.Size = new System.Drawing.Size(121, 31);
             this.QHeadTB.TabIndex = 0;
             // 
-            // CreatePDFBt
+            // QContentCreatedList
             // 
-            this.CreatePDFBt.Location = new System.Drawing.Point(856, 439);
-            this.CreatePDFBt.Name = "CreatePDFBt";
-            this.CreatePDFBt.Size = new System.Drawing.Size(280, 63);
-            this.CreatePDFBt.TabIndex = 12;
-            this.CreatePDFBt.Text = "Erstelle PDF";
-            this.CreatePDFBt.UseVisualStyleBackColor = true;
-            this.CreatePDFBt.Click += new System.EventHandler(this.CreatePDFBt_Click);
+            this.QContentCreatedList.FormattingEnabled = true;
+            this.QContentCreatedList.ItemHeight = 25;
+            this.QContentCreatedList.Location = new System.Drawing.Point(858, 63);
+            this.QContentCreatedList.Name = "QContentCreatedList";
+            this.QContentCreatedList.Size = new System.Drawing.Size(178, 354);
+            this.QContentCreatedList.TabIndex = 13;
+            // 
+            // AContentCreatedList
+            // 
+            this.AContentCreatedList.FormattingEnabled = true;
+            this.AContentCreatedList.ItemHeight = 25;
+            this.AContentCreatedList.Location = new System.Drawing.Point(1101, 63);
+            this.AContentCreatedList.Name = "AContentCreatedList";
+            this.AContentCreatedList.Size = new System.Drawing.Size(178, 354);
+            this.AContentCreatedList.TabIndex = 14;
             // 
             // Form1
             // 
@@ -469,6 +491,8 @@ namespace KKSysForms
         private System.Windows.Forms.Button ELAndTheCreatorBt;
         private System.Windows.Forms.Button AddCardCreatorBt;
         private System.Windows.Forms.Button CreatePDFBt;
+        private System.Windows.Forms.ListBox AContentCreatedList;
+        private System.Windows.Forms.ListBox QContentCreatedList;
     }
 }
 

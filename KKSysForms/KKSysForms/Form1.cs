@@ -119,7 +119,13 @@ namespace KKSysForms
             if (this.QContentTB.Text == "" || this.QHeadTB.Text == "" || this.AHeadTB.Text == "" || this.AContentTB.Text == "")
             {
                 return;
-            }    
+            }
+
+            this.AContentCreatedList.Items.Add(AContentTB.Text);
+            this.AContentCreatedList.Update();
+            this.QContentCreatedList.Items.Add(QContentTB.Text);
+            this.QContentCreatedList.Update();
+
 
             Controller.system.CreateCards(null, this.QHeadTB.Text
                 , this.AHeadTB.Text, this.QContentTB.Text, this.AContentTB.Text);
@@ -136,14 +142,22 @@ namespace KKSysForms
             }
             else
             {
-                if (this.EventLabelCreatorTB.Text != "")
+                
+                Controller.system.CreateEventLabel(this.EventLabelCreatorTB.Text);         
+                Controller.system.CreateTheme(this.ThemeCreatorTB.Text);
+                ThemeBoxCreatorCB.Items.Clear();
+                EvBoxCreatorCb.Items.Clear();
+                foreach (KKSysForms_Event.EventLabel el in Controller.system.GetLoadedReference())
                 {
-                    Controller.system.CreateEventLabel(this.EventLabelCreatorTB.Text);
+                    System.Collections.Generic.List<KKSysForms_CardModel.Theme> them = el.getThemeList();
+                    foreach (KKSysForms_CardModel.Theme th in them)
+                    {
+                        this.ThemeBoxCreatorCB.Items.Add(th);
+                    }
+                    this.EvBoxCreatorCb.Items.Add(el);
+
                 }
-                if (this.ThemeBoxCreatorCB.Text != "")
-                {
-                    Controller.system.CreateTheme(this.ThemeCreatorTB.Text);
-                }
+
 
                 this.EventLabelCreatorTB.Text = "";
                 this.ThemeCreatorTB.Text = "";

@@ -45,21 +45,7 @@ namespace KKSysForms
                 {
                     DatabaseConnector.getInstance().InsertData(this.loadedLabel);
                     datastored = value;
-                    if (loadedLabel.Contains(currentTarget))
-                    {
-                        if (currentTarget.getThemeList().Contains(currentThemeTarget))
-                        {
-
-                        }
-                        else
-                        {
-                            throw new Exception("Damn it");
-                        }
-                    }
-                    else
-                    {
-                        throw new Exception("Damn it 2");
-                    }
+                   
                 }
                 else
                 {
@@ -73,7 +59,11 @@ namespace KKSysForms
         {
             database = DatabaseConnector.getInstance();
             loadedLabel = database.InitialCallDatabase();
-            currentTarget = loadedLabel.ElementAt(0);
+            if (!(loadedLabel.Count == 0))
+            {
+                currentTarget = loadedLabel.ElementAt(0);
+            }
+          
             
           
         }
@@ -93,10 +83,11 @@ namespace KKSysForms
             return ref currentThemeTarget;
         }
 
+        //TODO: Remove Theme Param maybe
         public void CreatePDF(Theme name)
         {
-            
-            GeneratePDF.GeneratePDFFile(name.GetQA(), name.ThemeName);
+           
+            GeneratePDF.GeneratePDFFile(currentThemeTarget.GetQA(), currentThemeTarget.ThemeName, GeneratePDF.DIN.A8);
         }
 
         public void CreateEventLabel(String name)
