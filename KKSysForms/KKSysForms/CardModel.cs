@@ -5,8 +5,8 @@ using System.Linq;
 using KKSysForms_DataTypes;
 using KKSysForms_Filter;
 
-//TODO: Composite pattern
 //TODO: Fill this class
+//TODO: Coding for the content
 namespace KKSysForms_CardModel
 {
     //TODO: Implement ContentCard
@@ -117,6 +117,11 @@ namespace KKSysForms_CardModel
        
 
         public abstract void GetObjectData(SerializationInfo info, StreamingContext context);
+
+        //THis method should return the content of a card 
+        //The content should be easy readable for human non developer
+        public abstract String GetHumanReadableContent();
+      
     }
 
 
@@ -154,6 +159,11 @@ namespace KKSysForms_CardModel
         }
 
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override string GetHumanReadableContent()
         {
             throw new NotImplementedException();
         }
@@ -271,6 +281,11 @@ namespace KKSysForms_CardModel
             info.AddValue("qCont", this.QuestionContent);
             info.AddValue("aHead", this.AnswerHeader);
             info.AddValue("aCont", this.AnswerContent);
+        }
+
+        public override string GetHumanReadableContent()
+        {
+            throw new NotImplementedException();
         }
     }
 }

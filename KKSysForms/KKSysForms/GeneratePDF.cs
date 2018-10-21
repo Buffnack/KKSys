@@ -12,6 +12,8 @@ namespace KKSysForms_PDFCreate
 {
     //TODO:  Create own Folder, delete tex file and delte .aux, .log etc
     //TODO: Multirow for Karteikarte: Theme // QHeader (1. Row) // Content oder?
+    //TODO: GEOMETRY for hardware printarea
+
     
     static class GeneratePDF
     {

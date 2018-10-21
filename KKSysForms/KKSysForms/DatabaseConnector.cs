@@ -26,24 +26,27 @@ using KKSysForms_SerializeBoundModul;
 //Teste IF not exists anweisung
 namespace KKSysDatabase
 {
-   //Was funktioniert: Wiederholende Events einfuegen und updaten
-   //Anlegen der Datenbank
-   //Auslesen der Datenbank (wiederholende nur
+  
+   
    //Fehlt: Onetime events
    //Befuerchtung: Synchroner Aufruf wuerde kollidieren mit der GUI: Sprich keine Reaktion solange gewartet wird
    //Sollte daher in einem Thread ablaufen
    //TODO: Filter-Anfrage
    //TODO: Events werden noch nicht rangeholt... bzw vollständig rangeholt
    //TODO: Create hide folder with Database!
+   //TODO: Async database call for cards and themes
     class DatabaseConnector
     {
+        //Maybe remove this
         public static List<KKSysForms_CardModel.Card> AddToDatabase = new List<KKSysForms_CardModel.Card>();
        
         //The one and only instance
         private static DatabaseConnector instance;
 
+        //fixed memory var for database connection
         private SQLiteConnection connection;
 
+        //FIxed memory var for sql command
         private static SQLiteCommand command;
 
 
@@ -53,7 +56,7 @@ namespace KKSysDatabase
         //Sollten wir auf Dateisystemebene verstecken
         private const String databaseName = "KKSys.db";
         
-
+        //Singleton pattern: Getter of this instance
         public static DatabaseConnector getInstance()
         {
             if (instance == null)
@@ -65,7 +68,7 @@ namespace KKSysDatabase
             return instance;
         }
 
-
+        //Main interface
         public void InsertData(List<EventLabel> insert)
         {
             //TagList woher?
@@ -92,6 +95,7 @@ namespace KKSysDatabase
             return eventLabels;
         }
 
+        //Main interface - return all eventlabels
         private List<KKSysForms_Event.EventLabel> GetEventLabels()
         {
             ResetCommand();
@@ -133,6 +137,24 @@ namespace KKSysDatabase
             return returnList;
         }
 
+        //Implement
+        private List<NonRepeatingEvents> GetNonRepeatEvents(EventLabel el)
+        {
+
+            return null;
+        }
+        //Implement
+        private List<NonReferencedOneTimeEvent> GetNonReferencedOneTimeEvents(EventLabel el)
+        {
+            return null;
+        }
+        //Implement
+        private List<ReferencedOneTimeEvent> GetReferencedOneTimeEvents(EventLabel el)
+        {
+            return null;
+        }
+
+        //Gets the themes from database
         private List<KKSysForms_CardModel.Theme> GetThemes(EventLabel el)
         {
             List<Theme> returnList = new List<Theme>();
@@ -143,21 +165,44 @@ namespace KKSysDatabase
             {
                 thm = new Theme(resultTable.GetString(1), true);
                 thm.IDatabaseID = resultTable.GetInt64(0);
+                thm.GetQA().AddRange(GetCards(thm));
+                GetCards(thm);
                 returnList.Add(thm);
             }
             resultTable.Close();
             return returnList;
         }
 
-
+        //Sets cards of theme
+        private List<QACard> GetCards(Theme th)
+        {
+            ResetCommand();
+            command.CommandText = "SELECT ID,serialized from QACard where ThemeID = " + th.IDatabaseID + ";";
+            SQLiteDataReader tmpTable;
+            List<QACard> returnList = new List<QACard>();
+            tmpTable = command.ExecuteReader();
+            while (tmpTable.Read())
+            {
+                QACard tmpCard = (QACard)Serialize.GetDeserializeObject((byte[])tmpTable.GetValue(1));
+                tmpCard.IDatabaseID = tmpTable.GetInt64(0);
+                returnList.Add(tmpCard);
+                
+            }
+            tmpTable.Close();
+            return returnList;
+            
+            
+        }
         //TODO
         //This Method executes a Filter
+        //THis method should find cards with tags
         public List<KKSysForms_Event.EventLabel> FilterCallEvent(KKSysForms_Filter.Filter filter)
         {
             return null;
         }
 
-        //Tags still missing
+        //This method insert the labels and themes into the database
+        //needed to insert cards 
         private void InsertReferences(List<EventLabel> labels)
         {
             ResetCommand();
@@ -369,9 +414,6 @@ namespace KKSysDatabase
                 }
             }        
         }
-
-        //Guess i wanna have not much serialize shit in the insert
-        //Class for it
        
 
         private DatabaseConnector()
