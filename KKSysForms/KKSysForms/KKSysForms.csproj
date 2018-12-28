@@ -86,6 +86,8 @@
   <ItemGroup>
     <Compile Include="CardModel.cs" />
     <Compile Include="CardStack.cs" />
+    <Compile Include="Database\Database_Datatype.cs" />
+    <Compile Include="Database\Database_Modul.cs" />
     <Compile Include="ObjectManager.cs" />
     <Compile Include="Events.cs" />
     <Compile Include="ContentModel.cs" />
@@ -151,7 +153,6 @@
     <Content Include="TestData.sql" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Database\" />
     <Folder Include="KKSys\Exceptions\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -9,6 +9,7 @@ using System.Data.SQLite;
 
 namespace KKSysForms
 {
+    
     class Database_Modul
     {
         private static SQLiteConnection Connection;
