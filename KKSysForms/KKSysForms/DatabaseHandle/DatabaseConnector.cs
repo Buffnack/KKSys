@@ -551,7 +551,7 @@ namespace KKSysDatabase
             String tmp;
             try
             {
-                tmpRe = new System.IO.StreamReader("InitializeDatabase.sql");
+                tmpRe = new System.IO.StreamReader("SQL\\SQL_Init\\InitializeDatabase.sql");
                 while ((tmp = tmpRe.ReadLine()) != null)
                 {
                     command.CommandText = tmp;
